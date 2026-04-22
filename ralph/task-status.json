@@ -101,12 +101,12 @@
     },
     {
       "id": 12,
-      "title": "Document API workflow in README",
-      "description": "Finish root README: state UTF-8 as default for CSV in and Markdown out, document download naming (e.g. Content-Disposition or suggested filename vs source basename), and keep references aligned with test projects and artifacts under artifacts/test-output/.",
+      "title": "Finalize README test and API workflow docs",
+      "description": "Align README commands, test project references, and artifact table with the real layout and behavior; state clearly whether default dotnet test runs the full matrix including large-row API tests, or document opt-in filters if split later.",
       "status": "inQa",
       "devIterations": 2,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T17:37:29.855Z"
+      "updatedAt": "2026-04-22T17:38:04.550Z"
     },
     {
       "id": 13,
@@ -120,23 +120,23 @@
     {
       "id": 14,
       "title": "Close epic Definition of Done checklist",
-      "description": "Verify each ralph/epic.md Definition of Done line against the repository (API contract, polling, conversion and streaming, dotnet test and 10k artifacts, footer vs body count), and if anything is still open either fix it in code or add a short evidence note; otherwise mark QA complete.",
+      "description": "Verify each Definition of Done item in ralph/epic.md against the repo (API, tests, artifacts, streaming justification) and update epic markdown checkboxes or brief notes only if something is still open.",
       "status": "done",
       "devIterations": 1,
       "createdAt": "2026-04-22T17:35:54.464Z",
-      "updatedAt": "2026-04-22T17:37:47.661Z"
+      "updatedAt": "2026-04-22T17:38:04.550Z"
     },
     {
       "id": 15,
-      "title": "Align requirements Definition of Done",
-      "description": "Reconcile the checklist at the bottom of requirements.md with the shipped API, library behavior, epic, and the documented test workflow, marking items complete when supported by the repo and dotnet test evidence.",
-      "status": "inQa",
+      "title": "Sync requirements Definition of Done checkboxes",
+      "description": "After implementation verification matches requirements.md, update the Definition of Done checkbox list at the bottom of requirements.md so it stays consistent with the epic and verified product state.",
+      "status": "done",
       "devIterations": 1,
       "createdAt": "2026-04-22T17:36:55.895Z",
-      "updatedAt": "2026-04-22T17:37:24.604Z"
+      "updatedAt": "2026-04-22T17:38:08.140Z"
     }
   ],
-  "currentTaskNum": 14,
+  "currentTaskNum": 15,
   "totalLLMCalls": 6,
   "maxLLMCalls": 500,
   "nextTask": {
@@ -145,9 +145,9 @@
     "updatedAt": "2026-04-22T17:37:27.735Z"
   },
   "feedback": {
-    "taskId": 14,
-    "content": "Checked `ralph/epic.md` (all Definition of Done items marked complete), the API (`POST /jobs`, `GET /jobs/{id}`, `GET /jobs/{id}/result`), README workflow (`dotnet test` and API test project), `ApiJobFlowIntegrationTests` (10k-row case with footer and body row assertions plus artifacts), `LargeFileStreamingTests` (streaming justification and 50k-row footer check), and `artifacts/test-output/` (including `api-large-10000-input.csv`, `api-large-10000-output.md` with `10000 data rows` matching the table). Ran `dotnet test`: all 20 tests passed.\n\n```\n<status>verified</status>\n```\n",
-    "updatedAt": "2026-04-22T17:37:47.660Z"
+    "taskId": 15,
+    "content": "Checked `requirements.md` against `ralph/epic.md`, ran `dotnet test` (20 tests, all passed), and confirmed `artifacts/test-output/` contains the API large/small CSV/MD pairs plus other listed artifacts. The five Definition of Done items in `requirements.md` match the epic’s intent and the verified product state (async upload/status/download, polling model, conversion semantics, `dotnet test` + artifacts including 10k-row API case, footer/body consistency asserted in `ApiJobFlowIntegrationTests`).\n\n```\n<status>verified</status>\n```\n",
+    "updatedAt": "2026-04-22T17:38:08.139Z"
   },
-  "lastUpdated": "2026-04-22T17:37:47.661Z"
+  "lastUpdated": "2026-04-22T17:38:08.140Z"
 }
