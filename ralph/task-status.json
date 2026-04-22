@@ -13,10 +13,10 @@
       "id": 2,
       "title": "Implement public CsvConverter API",
       "description": "Create a public CsvConverter class that wires CsvParser and MarkdownRenderer together. It should accept an input CSV file path and an optional output path, defaulting to same directory as input with .md extension, and write the rendered Markdown to disk.",
-      "status": "backlog",
-      "devIterations": 0,
+      "status": "done",
+      "devIterations": 1,
       "createdAt": "2026-04-22T14:27:44.425Z",
-      "updatedAt": "2026-04-22T14:27:44.425Z"
+      "updatedAt": "2026-04-22T14:36:52.720Z"
     },
     {
       "id": 3,
@@ -25,7 +25,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T14:27:44.425Z",
-      "updatedAt": "2026-04-22T14:27:44.425Z"
+      "updatedAt": "2026-04-22T14:33:26.069Z"
     },
     {
       "id": 4,
@@ -34,7 +34,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T14:27:44.425Z",
-      "updatedAt": "2026-04-22T14:27:44.425Z"
+      "updatedAt": "2026-04-22T14:33:26.069Z"
     },
     {
       "id": 5,
@@ -43,7 +43,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T14:27:44.425Z",
-      "updatedAt": "2026-04-22T14:27:44.425Z"
+      "updatedAt": "2026-04-22T14:33:26.069Z"
     },
     {
       "id": 6,
@@ -52,21 +52,21 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T14:27:44.425Z",
-      "updatedAt": "2026-04-22T14:27:44.425Z"
+      "updatedAt": "2026-04-22T14:33:26.069Z"
     }
   ],
-  "currentTaskNum": 1,
-  "totalLLMCalls": 3,
+  "currentTaskNum": 2,
+  "totalLLMCalls": 6,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": 1,
-    "content": "Now I have a complete picture of the project state. The CSV parser is implemented and tested, but the Markdown renderer, converter API, CLI, integration tests, and documentation are all missing.\n\n```json\n[\n  {\n    \"id\": 1,\n    \"title\": \"Implement GFM Markdown table renderer\",\n    \"description\": \"Create a MarkdownRenderer class in the CsvToMarkdown library that accepts an IEnumerable of string arrays (rows) and produces a GFM-style pipe table string with a header row, separator row, body rows, and a trailing footer line reporting the data row count.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Implement public CsvConverter API\",\n    \"description\": \"Create a public CsvConverter class that wires CsvParser and MarkdownRenderer together. It should accept an input CSV file path and an optional output path, defaulting to same directory as input with .md extension, and write the rendered Markdown to disk.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 3,\n    \"title\": \"Add renderer and integration tests with artifacts\",\n    \"description\": \"Write xUnit tests for MarkdownRenderer (minimal table, multi-row, empty field, quoted comma edge case) and end-to-end integration tests for CsvConverter. All tests must write actual .md output to artifacts/test-output/ so humans can inspect them after dotnet test.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 4,\n    \"title\": \"Implement CLI entry point\",\n    \"description\": \"Update Program.cs in CsvToMarkdown.Cli to accept a CSV file path as a command-line argument, invoke CsvConverter, and report success or usage errors to stdout/stderr with a non-zero exit code on failure.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 5,\n    \"title\": \"Add streaming large-file test\",\n    \"description\": \"Add a test (or inline justification in code) that verifies the conversion pipeline does not load the entire CSV into memory at once. Generate a file with many rows in the test and assert correct row count in output footer.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 6,\n    \"title\": \"Update README with artifact path and usage\",\n    \"description\": \"Add a README.md at the repo root documenting how to run the CLI, how to run dotnet test, where artifact .md outputs are written (artifacts/test-output/), and how to refresh golden files when output changes intentionally.\",\n    \"status\": \"backlog\"\n  }\n]\n```\n\n---\n\n## Task 1: Implement GFM Markdown Table Renderer\n\n### What and Why\n\nThe CSV parser (`CsvParser.cs`) is complete and streaming-capable, but there is no code to turn parsed rows into Markdown. This renderer is the central piece of the pipeline and is required before the converter API, CLI, or meaningful integration tests can be built.\n\n### Implementation Guidance\n\n**File to create:** `src/CsvToMarkdown/MarkdownRenderer.cs`\n\nCreate an `internal static class MarkdownRenderer` (same accessibility pattern as `CsvParser`) with a single public method:\n\n```\npublic static void Render(IEnumerable<string[]> rows, TextWriter writer)\n```\n\n- `rows`: the streaming sequence from `CsvParser.ParseRows`. The first element is the header row; all subsequent elements are data rows.\n- `writer`: a `TextWriter` so the caller controls whether output goes to a file, a `StringWriter` for tests, or stdout. This keeps the class testable without touching the filesystem.\n\n**Output format (GFM pipe table):**\n\nGiven header `[\"Name\",\"Age\"]` and data rows `[\"Alice\",\"30\"]`, `[\"Bob\",\"25\"]`:\n\n```\n| Name | Age |\n| --- | --- |\n| Alice | 30 |\n| Bob | 25 |\n\n2 data rows\n```\n\nRules:\n1. Header row: `| col1 | col2 | ... |`\n2. Separator row immediately after header: `| --- | --- | ... |` (one `---` per column, no alignment colons needed for MVP)\n3. Each data row: `| val1 | val2 | ... |`\n4. After all rows, write one blank line then a footer: `N data rows` (where N is the count of non-header rows). Use singular/plural form: `1 data row` vs `2 data rows`.\n5. Pipe characters that appear inside cell values must be escaped as `\\|` to preserve GFM validity.\n6. The method must be streaming: enumerate `rows` once, writing each row to the writer immediately, never accumulating all rows in a list (except to count them as they pass through).\n\n**Counting rows while streaming:**\n\nThe footer needs the count, but with streaming you cannot know it until the end. The simplest correct approach: maintain a local `int dataRowCount = 0` counter; increment it for each non-header row as you write it; after the loop write the footer. This is O(1) memory.\n\n**Edge cases to handle:**\n- If the sequence is empty (no rows at all), write nothing and footer `0 data rows`.\n- If only one row (header only, no data), write header + separator + footer `0 data rows`.\n- Empty cell values: render as an empty cell `|  |` (one space padding each side, or just `||` - be consistent; one-space padding is more readable).\n\n### Testing Steps\n\nAfter writing the class, run:\n\n```\ndotnet test tests/CsvToMarkdown.Tests/\n```\n\nThe existing CSV parser tests should still pass. Renderer-specific tests come in Task 3, but you can verify compilation and parser tests pass now.\n\n### Acceptance Criteria\n\n- `MarkdownRenderer.cs` exists in `src/CsvToMarkdown/` and compiles cleanly with no warnings.\n- The `Render` method signature accepts `IEnumerable<string[]>` and `TextWriter`.\n- Given a two-column, two-data-row input the method writes exactly: header row, separator row, two data rows, blank line, footer line.\n- Pipe characters in cell values are escaped as `\\|`.\n- The method does NOT materialize all rows into memory (no `.ToList()` on the full input sequence inside the renderer).\n- `dotnet build` and `dotnet test` both succeed after this task.\n\n---\n\n## Remaining Planned Tasks\n- Implement GFM Markdown table renderer\n- Implement public CsvConverter API\n- Add renderer and integration tests with artifacts\n- Implement CLI entry point\n- Add streaming large-file test\n- Update README with artifact path and usage\n\n<task-id>1</task-id>\n\nAll 5 existing tests pass. The `MarkdownRenderer` compiles cleanly and the build succeeds. Let me commit this.\n\n",
-    "updatedAt": "2026-04-22T14:27:44.433Z"
+    "taskId": 2,
+    "content": "```json\n[\n  { \"id\": 2, \"title\": \"Implement public CsvConverter API\", \"description\": \"Create a public CsvConverter class that wires CsvParser and MarkdownRenderer together. It should accept an input CSV file path and an optional output path, defaulting to same directory as input with .md extension, and write the rendered Markdown to disk.\", \"status\": \"backlog\" },\n  { \"id\": 3, \"title\": \"Add renderer and integration tests with artifacts\", \"description\": \"Write xUnit tests for MarkdownRenderer (minimal table, multi-row, empty field, quoted comma edge case) and end-to-end integration tests for CsvConverter. All tests must write actual .md output to artifacts/test-output/ so humans can inspect them after dotnet test.\", \"status\": \"backlog\" },\n  { \"id\": 4, \"title\": \"Implement CLI entry point\", \"description\": \"Update Program.cs in CsvToMarkdown.Cli to accept a CSV file path as a command-line argument, invoke CsvConverter, and report success or usage errors to stdout/stderr with a non-zero exit code on failure.\", \"status\": \"backlog\" },\n  { \"id\": 5, \"title\": \"Add streaming large-file test\", \"description\": \"Add a test (or inline justification in code) that verifies the conversion pipeline does not load the entire CSV into memory at once. Generate a file with many rows in the test and assert correct row count in output footer.\", \"status\": \"backlog\" },\n  { \"id\": 6, \"title\": \"Update README with artifact path and usage\", \"description\": \"Add a README.md at the repo root documenting how to run the CLI, how to run dotnet test, where artifact .md outputs are written (artifacts/test-output/), and how to refresh golden files when output changes intentionally.\", \"status\": \"backlog\" }\n]\n```\n\n---\n\n## Task 2: Implement public CsvConverter API\n\n### What and Why\n\n`CsvParser` and `MarkdownRenderer` are both implemented but there is no class that wires them together into a usable API. `CsvConverter` is the facade that the CLI (Task 4) and integration tests (Task 3) will depend on. It must be implemented before either of those tasks can proceed.\n\n### Implementation Guidance\n\n**File to create:** `src/CsvToMarkdown/CsvConverter.cs`\n\nCreate a `public static class CsvConverter` in the `CsvToMarkdown` namespace with a single public static method:\n\n```\npublic static void Convert(string inputPath, string? outputPath = null)\n```\n\nBehavior:\n- `inputPath`: absolute or relative path to a `.csv` file. If the file does not exist, throw a `FileNotFoundException` with a clear message including the path.\n- `outputPath`: optional. If `null` or empty, derive the output path by replacing the input file's extension with `.md`, keeping the same directory. Example: `/data/sales.csv` -> `/data/sales.md`.\n- Call `CsvParser.ParseRows(inputPath)` to obtain the streaming row sequence.\n- Call `MarkdownRenderer.Render(rows, writer)` passing a `StreamWriter` opened on the resolved output path (UTF-8, no BOM is fine).\n- After writing, flush and close/dispose the writer cleanly via a `using` block.\n- Do not catch and swallow exceptions -- let them propagate so callers (CLI, tests) can handle them.\n\n**Output path resolution logic (edge cases):**\n- If `inputPath` has no extension (e.g., `myfile`), append `.md` to produce `myfile.md`.\n- Resolve the output path relative to the input file's directory, not the current working directory.\n\n**Access modifiers:**\n- `CsvParser` and `MarkdownRenderer` are currently `internal`. `CsvConverter` must be `public` since it is the public API surface.\n- `CsvParser` and `MarkdownRenderer` remain `internal` -- they are implementation details.\n\n**No overload proliferation:** A single method with an optional parameter is sufficient for this task. Do not add overloads for `TextWriter`, `Stream`, etc.; those belong to a future task if needed.\n\n### Testing Steps\n\nAfter creating the file, verify the solution compiles:\n\n```\ndotnet build src/CsvToMarkdown/CsvToMarkdown.csproj\n```\n\nThen run existing tests to confirm no regression:\n\n```\ndotnet test tests/CsvToMarkdown.Tests/\n```\n\nAll 5 existing CSV parser tests should still pass. `CsvConverter` tests are written in Task 3.\n\n### Acceptance Criteria\n\n- `CsvConverter.cs` exists in `src/CsvToMarkdown/` with `public static class CsvConverter` in the `CsvToMarkdown` namespace.\n- `Convert(string inputPath, string? outputPath = null)` is the public API method.\n- When called with only `inputPath`, it produces a `.md` file in the same directory as the CSV.\n- When called with an explicit `outputPath`, it writes to that path.\n- If `inputPath` does not refer to an existing file, a `FileNotFoundException` is thrown with the path in the message.\n- `dotnet build` produces zero errors and zero warnings.\n- `dotnet test` passes all existing tests.\n\n---\n\n## Remaining Planned Tasks\n- Implement public CsvConverter API\n- Add renderer and integration tests with artifacts\n- Implement CLI entry point\n- Add streaming large-file test\n- Update README with artifact path and usage\n\n<task-id>2</task-id>\n\nAll 5 tests pass, build succeeds with zero warnings.\n\n",
+    "updatedAt": "2026-04-22T14:33:26.073Z"
   },
   "feedback": {
-    "taskId": 1,
-    "content": "<status>verified</status>\n\nMarking the renderer task as complete and recording the result. Calling report_intent then task_complete to finalize the work.\n\n",
-    "updatedAt": "2026-04-22T14:31:08.638Z"
+    "taskId": 2,
+    "content": "Running build and tests and reading CsvConverter.cs to verify the public API and behavior specified in Task 2. This checks file existence, correctness of Convert method, error handling, output path logic, and that build/tests pass with zero warnings.\n\nNow running the build & tests and viewing the converter file. I'll report intent and run the necessary tools in parallel.\n\n<status>verified</status>\n\n",
+    "updatedAt": "2026-04-22T14:36:52.719Z"
   },
-  "lastUpdated": "2026-04-22T14:31:08.639Z"
+  "lastUpdated": "2026-04-22T14:36:52.720Z"
 }
