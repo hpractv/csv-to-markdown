@@ -50,11 +50,13 @@ Start the API:
 dotnet run --project src/CsvToMarkdown.Api
 ```
 
-With the default Development launch profile, local URLs are:
+`dotnet run` uses `Properties/launchSettings.json`. Profiles set `ASPNETCORE_ENVIRONMENT=Development` (Swagger enabled). The default `http` profile listens on `http://localhost:5085`:
 
 - API base URL: `http://localhost:5085`
 - Swagger UI: `http://localhost:5085/swagger`
 - OpenAPI JSON: `http://localhost:5085/swagger/v1/swagger.json`
+
+The `https` profile also binds `http://localhost:5085` plus `https://localhost:7042` if you need TLS locally.
 
 ### API contract
 
@@ -139,7 +141,8 @@ If any test assertions fail because of the intentional change, update the affect
 - `tests/CsvToMarkdown.Tests/MarkdownRendererTests.cs` -- unit tests for MarkdownRenderer
 - `tests/CsvToMarkdown.Tests/CsvConverterIntegrationTests.cs` -- end-to-end integration tests
 - `tests/CsvToMarkdown.Tests/LargeFileStreamingTests.cs` -- large-file streaming test
-- `tests/CsvToMarkdown.Tests/ApiIntegrationTests.cs` -- API integration tests
-- `tests/CsvToMarkdown.Api.Tests/ApiJobFlowIntegrationTests.cs` -- API upload/poll/download artifact tests
+- `tests/CsvToMarkdown.Api.Tests/ApiJobFlowIntegrationTests.cs` -- API upload/poll/download flow; persists `api-small-edge-case-*` and `api-large-10000-*` under `artifacts/test-output/`
+
+`tests/CsvToMarkdown.Tests/ApiIntegrationTests.cs` covers lightweight HTTP checks only; it does not write those `api-*` artifacts or assert on the generated Markdown body.
 
 Run `dotnet test` again after updating the assertions to confirm everything passes.

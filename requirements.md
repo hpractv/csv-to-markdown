@@ -39,8 +39,8 @@ Conversion must run asynchronously: clients submit a file, receive a job id, pol
 
 ## Definition of Done
 
-- [ ] Async job API (upload, status, download or equivalent documented contract) is implemented and documented.
-- [ ] Status polling supports completion checks without a long-lived upload request.
-- [ ] Conversion behavior matches required table and footer rules, with large-input handling that is streaming/chunked or otherwise justified.
-- [ ] Test workflow passes (`dotnet test` per documented process), and artifact output includes retained input/output pairs, including a 10k-row run.
-- [ ] Persisted large-file Markdown footer count matches emitted data-row count.
+- [x] Async job API (upload, status, download or equivalent documented contract) is implemented and documented.
+- [x] Status polling supports completion checks without a long-lived upload request.
+- [x] Conversion behavior matches required table and footer rules, with large-input handling that is streaming/chunked or otherwise justified.
+- [x] Test workflow passes (`dotnet test` per documented process), and artifact output includes retained input/output pairs, including a 10k-row run.
+- [x] Persisted large-file Markdown footer count matches emitted data-row count.

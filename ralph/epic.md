@@ -27,11 +27,11 @@ Expose an **HTTP API** that accepts an uploaded CSV and produces the same Markdo
 
 ## Definition of Done
 
-- [ ] Async job API: upload, status, download (or equivalent documented download contract) implemented and documented (OpenAPI/Swagger or README).
-- [ ] Status endpoint allows clients to poll until completion without holding a long-lived upload connection.
-- [ ] Conversion matches table + footer rules; streaming or chunked processing justified for large inputs.
-- [ ] `dotnet test` (per documented dev workflow) passes; **artifact directory contains retained input/output pairs**, including **10k-row** run artifacts for comparison.
-- [ ] Footer row count matches data rows in the emitted table for persisted large-file output.
+- [x] Async job API: upload, status, download (or equivalent documented download contract) implemented and documented (OpenAPI/Swagger or README).
+- [x] Status endpoint allows clients to poll until completion without holding a long-lived upload connection.
+- [x] Conversion matches table + footer rules; streaming or chunked processing justified for large inputs.
+- [x] `dotnet test` (per documented dev workflow) passes; **artifact directory contains retained input/output pairs**, including **10k-row** run artifacts for comparison.
+- [x] Footer row count matches data rows in the emitted table for persisted large-file output.
 
 ## Out of scope (unless explicitly added later)
 
