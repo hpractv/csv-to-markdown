@@ -58,10 +58,10 @@
       "id": 7,
       "title": "Create ASP.NET Core Web API project",
       "description": "Add a new ASP.NET Core minimal API project (CsvToMarkdown.Api) to the solution, referencing the CsvToMarkdown library. Wire it into the .slnx and configure it for net10.0 with Swagger/OpenAPI enabled.",
-      "status": "inQa",
+      "status": "done",
       "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:24:29.014Z"
+      "updatedAt": "2026-04-22T15:59:57.388Z"
     },
     {
       "id": 8,
@@ -85,10 +85,10 @@
       "id": 10,
       "title": "Implement status and download endpoints",
       "description": "Add GET /jobs/{id} for JSON status and optional error, and GET /jobs/{id}/result to return text/markdown when succeeded with correct errors for missing or incomplete jobs.",
-      "status": "backlog",
+      "status": "inProgress",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:39:28.962Z"
+      "updatedAt": "2026-04-22T15:43:27.900Z"
     },
     {
       "id": 11,
@@ -97,7 +97,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:39:28.962Z"
+      "updatedAt": "2026-04-22T15:43:27.898Z"
     },
     {
       "id": 12,
@@ -106,21 +106,21 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:39:28.962Z"
+      "updatedAt": "2026-04-22T15:43:27.898Z"
     }
   ],
-  "currentTaskNum": 9,
-  "totalLLMCalls": 6,
+  "currentTaskNum": 7,
+  "totalLLMCalls": 1,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": 9,
-    "content": "Here is the assessment: `requirements.md` is empty, so `ralph/epic.md` defines scope. The library, CLI, tests, README for CLI, and `CsvToMarkdown.Api` scaffold (Swagger, health, singleton `IJobStore`) plus the in-memory job types (`Job`, `JobStatus`, `IJobStore`, `InMemoryJobStore`) are in place. `Program.cs` only maps `/health`; there is no `CsvToMarkdown.Api.Tests` project. Remaining epic work is the job HTTP surface, API integration tests with artifacts, and README API docs. Task 7 is `inQa` but the described scaffold already exists, so it is not listed as engineering backlog below (same work already satisfied in tree).\n\n```json\n[\n  { \"id\": 9, \"title\": \"Implement upload endpoint\", \"description\": \"Add POST /jobs accepting multipart/form-data with a CSV file, enqueue background conversion, and return 202 Accepted with job id and initial status without waiting for completion.\", \"status\": \"backlog\" },\n  { \"id\": 10, \"title\": \"Implement status and download endpoints\", \"description\": \"Add GET /jobs/{id} for JSON status and optional error, and GET /jobs/{id}/result to return text/markdown when succeeded with correct errors for missing or incomplete jobs.\", \"status\": \"backlog\" },\n  { \"id\": 11, \"title\": \"Write API integration tests\", \"description\": \"Add CsvToMarkdown.Api.Tests with WebApplicationFactory covering upload, poll until terminal state, and download for a small edge-case CSV and a 10k-row CSV, with artifacts under artifacts/test-output/.\", \"status\": \"backlog\" },\n  { \"id\": 12, \"title\": \"Update README with API documentation\", \"description\": \"Document how to run the API, Swagger URL, curl examples for upload, status, and download, test commands, and new artifact files from the API test suite.\", \"status\": \"backlog\" }\n]\n```\n\n## Next task (implementation-ready): Task 9 -- Implement upload endpoint\n\n**Why it matters:** The epic requires an asynchronous job flow: clients upload a CSV, receive a job id immediately, then poll and download later. Without `POST /jobs`, nothing can drive `IJobStore` or the conversion pipeline from HTTP, so the API cannot meet the Definition of Done.\n\n**What to do:** Add a minimal API route for `POST /jobs` that accepts `multipart/form-data` with one CSV file part (field name should be fixed and documented later in README task 12, for example `file`). On valid requests: create a job via `IJobStore.Create()` so it starts in `Queued`, return **202 Accepted** with a body that includes the job **id** and **status** (and any other small fields you want clients to rely on, kept stable for task 10). The handler must **return before** conversion finishes.\n\nQueue work so conversion runs after the response is sent: use a fire-and-forget pattern appropriate for ASP.NET Core (for example `Task.Run` with clear exception handling, or a hosted service pattern if you already use one elsewhere; avoid blocking the request thread). The background work should: transition the job to `Running` when work actually starts (`TrySetRunning`), materialize the uploaded bytes to a **temporary CSV path** (unique per job), run conversion using the existing `CsvToMarkdown.CsvConverter` (it requires filesystem paths today), read the produced Markdown bytes from the output path (UTF-8), store them with `TrySetSucceeded`, and on any failure call `TrySetFailed` with a **client-safe** message (no stack traces, no machine paths unless you sanitize). Clean up temp files in a `finally` or equivalent so disk does not leak under load.\n\nIf the multipart binding is invalid (no file, wrong content type, empty file), respond with **400 Bad Request** and do not create a job. If job creation races are impossible with your API, still handle `TrySet*` failures defensively so a job never stays `Queued`/`Running` forever without a terminal state when conversion throws.\n\n**Patterns:** Keep everything in the existing `Program.cs` style unless the file becomes unmaintainable; use the registered `IJobStore` from DI. Align status values with `JobStatus` already defined (`Queued`, `Running`, `Succeeded`, `Failed`). Preserve streaming-friendly behavior where practical: prefer writing the upload stream to disk without buffering the entire CSV in a single byte array if the API surface allows streaming to file.\n\n**Testing:** Run `dotnet build` on the solution. Manually hit `POST /jobs` with a small CSV using curl or Swagger UI and confirm **202** with an id, then confirm the job eventually reaches a terminal state via a temporary `GET` if you implement task 10 in the same branch, or use a debugger breakpoint. After task 10 exists, full automated flow belongs in task 11.\n\n**Acceptance criteria:** `POST /jobs` exists, accepts a CSV via multipart form data, returns **202** with job id and initial `Queued` (or documented initial state) without waiting for conversion; background work updates the same job to `Running`, then `Succeeded` with Markdown bytes stored, or `Failed` with a safe error string; invalid uploads yield **400**; temp input/output files are not left behind on success or failure paths; solution builds.\n\n**Traceability:** `requirements.md` is empty. This implements epic **HTTP API** items (upload, non-blocking job id) and supports later status and download items in `ralph/epic.md`.\n\n## Remaining Planned Tasks\n\n- Implement upload endpoint\n- Implement status and download endpoints\n- Write API integration tests\n- Update README with API documentation\n\n```\n<task-id>9</task-id>\n```\n",
-    "updatedAt": "2026-04-22T15:39:28.971Z"
+    "taskId": 7,
+    "content": "## Task: Create ASP.NET Core Web API project\n\nAdd a new ASP.NET Core minimal API project (CsvToMarkdown.Api) to the solution, referencing the CsvToMarkdown library. Wire it into the .slnx and configure it for net10.0 with Swagger/OpenAPI enabled.",
+    "updatedAt": "2026-04-22T15:58:47.851Z"
   },
   "feedback": {
-    "taskId": 9,
-    "content": "Validation is complete: I checked the task scope, inspected the upload implementation and job state handling, and verified behavior with build/tests plus live API calls for valid and invalid uploads. I am now returning the final QA verdict in the required format.<status>verified</status>\n",
-    "updatedAt": "2026-04-22T15:42:24.756Z"
+    "taskId": 7,
+    "content": "thought:\nthought:\nthought:\nthought:\nthought:<status>verified</status>\n",
+    "updatedAt": "2026-04-22T15:59:57.387Z"
   },
-  "lastUpdated": "2026-04-22T15:42:24.757Z"
+  "lastUpdated": "2026-04-22T15:59:57.388Z"
 }
