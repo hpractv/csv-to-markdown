@@ -1,41 +1,45 @@
-# Epic: CSV → Markdown table (C#)
+# Epic: CSV → Markdown table (C#) — API + jobs
 
 ## Objective
 
-Accept a CSV input path (streaming-friendly for large files). Emit a Markdown file: same basename as the input, extension `.md`. First row → table header; following rows → body. Append one final line reporting the row count in the table body.
-
-Development includes running the test suite locally as you implement (after each meaningful change or vertical slice), not only before release.
+Expose an **HTTP API** that accepts an uploaded CSV and produces the same Markdown table semantics as Epic 1 (header row, body rows, footer line with total data-row count). Conversion runs **asynchronously**: the client receives a job identifier, **polls status** on another endpoint, then **downloads** the `.md` when the job completes. Preserve **streaming-friendly** handling for large CSVs server-side where practical.
 
 ## Functional requirements
 
-1. Input: path to a CSV file (delimiter and quoting per normal CSV rules; handle empty cells and quoted fields).
-2. Output: `{basename(input)}.md` alongside the input or at a caller-specified output path (choose one convention in code and document it).
-3. Markdown: valid GFM-style pipe table with a header row; body row count equals parsed data rows after the header.
-4. Footer: a single trailing line stating the total data rows (not including the header row).
+### Conversion (same semantics as library epic)
 
-## Testing (part of development; must ship with the feature)
+1. CSV parsing: delimiter and quoting per normal CSV rules; empty cells and quoted fields handled.
+2. Markdown: valid GFM-style pipe table; body row count matches parsed data rows after the header.
+3. Footer: one trailing line stating total data rows (excluding header).
 
-- **During development:** Run `dotnet test` while building the feature—same as you would compile—so regressions surface immediately. Treat failing tests as blocking further work on that slice until fixed or expectations updated deliberately.
-- **Project:** C# test project (xUnit or NUnit) references the converter library/API.
-- **Persisted artifacts:** Every test run writes generated `.md` (and golden/expected files if used) under a fixed repo-relative folder, e.g. `artifacts/test-output/` or `TestResults/parser/`, so humans and the loop can open files after `dotnet test`.
-- **Coverage:** At least—minimal table, multi-row, and one edge case (empty field and/or quoted comma).
-- **Failure signal:** On mismatch, persisted actual output remains on disk for diffing.
-- **Note in repo:** One short note (README section or test `README`) stating artifact path and how to refresh goldens when output is intentionally changed.
+### HTTP API
+
+4. **Upload:** `multipart/form-data` (or documented equivalent) accepts the CSV file; response returns a **job id** (and optionally initial status). Does not block until conversion finishes.
+5. **Status:** Request with job id returns processing state (e.g. queued / running / succeeded / failed) and, on failure, an error summary safe for clients.
+6. **Download:** When succeeded, a separate request retrieves the generated Markdown (same basename semantics as source file name where applicable, or documented naming). Failed or incomplete jobs do not return success content as if complete.
+
+## Testing (must ship with the feature)
+
+- **Unit tests:** C# test project (xUnit or NUnit); converter logic covered with small fixtures; artifacts under a fixed folder (e.g. `artifacts/test-output/`).
+- **Large-file scenario:** Automated coverage using **≥ 10,000 data rows** (plus header): generate or commit a large CSV fixture, run conversion (via API or shared service under test), **persist both the input CSV and output `.md`** under the artifact folder for side-by-side inspection and regression.
+- **API tests:** Integration tests exercise upload → poll until terminal state → download; assert status transitions and final Markdown/footer correctness for at least the large-file case and one small edge-case file.
+- **Development workflow:** **Running tests (including the large-file / API integration path) is part of routine development**—document the command(s), e.g. `dotnet test`, and any env or profile flag if the large test is opt-in to keep default runs fast (if split, document both default and full matrix).
 
 ## Definition of Done
 
-- [ ] Library or console entry point converts sample CSV to `.md` matching rules above.
-- [ ] Large-file path does not load the entire CSV into memory unnecessarily (streaming or chunked read—justify in code if full read is acceptable for MVP).
-- [ ] `dotnet test` is used throughout development and passes before the work is considered done; artifact folder contains inspectable `.md` outputs from the last run.
-- [ ] Footer row count matches the number of data rows in the emitted table.
+- [ ] Async job API: upload, status, download (or equivalent documented download contract) implemented and documented (OpenAPI/Swagger or README).
+- [ ] Status endpoint allows clients to poll until completion without holding a long-lived upload connection.
+- [ ] Conversion matches table + footer rules; streaming or chunked processing justified for large inputs.
+- [ ] `dotnet test` (per documented dev workflow) passes; **artifact directory contains retained input/output pairs**, including **10k-row** run artifacts for comparison.
+- [ ] Footer row count matches data rows in the emitted table for persisted large-file output.
 
 ## Out of scope (unless explicitly added later)
 
-- GUI, HTTP API, database.
-- Non-CSV formats, Excel, or encoding detection beyond a documented default (e.g. UTF-8).
+- GUI SPA (browser UI); native desktop app.
+- Non-CSV formats, Excel.
+- Encoding detection beyond a documented default (e.g. UTF-8).
 
 ## Loop hints
 
-- Prefer small vertical slices: parser → MD renderer → tests with golden/persisted files → run `dotnet test` → streaming if tests pass on small inputs.
-- After each slice or significant edit, run tests before moving on so failures stay localized and cheap to fix.
-- Stop when Definition of Done is satisfied; do not expand scope without updating this epic.
+- Slice vertically: shared converter core → minimal API + in-memory job store → integration tests → persist artifacts → tighten large-file performance if needed.
+- Stop when Definition of Done is satisfied; extend scope only by updating this epic.
