@@ -92,34 +92,34 @@
     },
     {
       "id": 11,
-      "title": "Harden API job-flow integration tests",
-      "description": "Extend CsvToMarkdown.Api.Tests so GET /jobs/{id}/result is proven never to return successful Markdown for Queued, Running, or Failed jobs, assert a believable status transition path on success, and remove or replace the misleading placeholder ApiIntegrationTests in CsvToMarkdown.Tests so the API suite is authoritative under solution-wide dotnet test.",
+      "title": "Complete API integration test coverage",
+      "description": "Strengthen API tests with realistic status transition assertions, explicit coverage for GET /jobs/{id}/result in non-success states matching Program.cs behavior, and consolidate or fix skeletal CsvToMarkdown.Tests API cases so names and expectations match the implementation.",
       "status": "done",
       "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T17:35:35.056Z"
+      "updatedAt": "2026-04-22T17:35:50.434Z"
     },
     {
       "id": 12,
-      "title": "Finish README and release checklist docs",
-      "description": "Close README gaps for the epic: document UTF-8 as the default encoding, describe the download filename or Content-Disposition behavior exposed by the result endpoint, add a concise note that server conversion follows the library streaming parser for large CSVs, sync test file references with the final test layout, and update ralph/epic.md Definition of Done checkboxes once verification is complete.",
+      "title": "Document API workflow in README",
+      "description": "Align README with the final test layout: accurate dotnet test filters or project paths, whether the 10k-row API test runs by default, and synchronized curl, Swagger, and artifact filenames after test changes land.",
       "status": "inQa",
       "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T17:35:29.924Z"
+      "updatedAt": "2026-04-22T17:35:50.434Z"
     },
     {
       "id": 13,
       "title": "Author root requirements.md",
-      "description": "Populate the empty requirements.md with the functional requirements, testing expectations, and definition of done drawn from ralph/epic.md so reviews and task traceability have a stable product anchor at the repo root.",
-      "status": "inQa",
+      "description": "Populate requirements.md at the repo root with functional requirements, API contract, testing expectations, and definition of done aligned with ralph/epic.md so reviews and tasks trace to a single product source.",
+      "status": "done",
       "devIterations": 1,
       "createdAt": "2026-04-22T17:34:52.064Z",
-      "updatedAt": "2026-04-22T17:35:28.041Z"
+      "updatedAt": "2026-04-22T17:35:53.173Z"
     }
   ],
-  "currentTaskNum": 11,
-  "totalLLMCalls": 3,
+  "currentTaskNum": 13,
+  "totalLLMCalls": 5,
   "maxLLMCalls": 500,
   "nextTask": {
     "taskId": 13,
@@ -127,9 +127,9 @@
     "updatedAt": "2026-04-22T17:34:52.074Z"
   },
   "feedback": {
-    "taskId": 11,
-    "content": "<status>verified</status>\n",
-    "updatedAt": "2026-04-22T17:35:35.055Z"
+    "taskId": 13,
+    "content": "Compared `requirements.md` to `ralph/epic.md`. The root file includes the objective, conversion and HTTP API requirements (aligned with the epic, with clearer numbering and an explicit body-row-count item), testing expectations (unit tests, artifacts path, 10k-row scenario, persisted input/output, integration flow, large + edge cases, dev workflow / `dotnet test`), and a Definition of Done checklist that matches the epic’s DoD items in substance. The task asked only for those three areas from the epic, not optional sections like Out of scope or loop hints.\n\n```\n<status>verified</status>\n```\n",
+    "updatedAt": "2026-04-22T17:35:53.172Z"
   },
-  "lastUpdated": "2026-04-22T17:35:35.056Z"
+  "lastUpdated": "2026-04-22T17:35:53.173Z"
 }
