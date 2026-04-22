@@ -58,19 +58,19 @@
       "id": 7,
       "title": "Create ASP.NET Core Web API project",
       "description": "Add a new ASP.NET Core minimal API project (CsvToMarkdown.Api) to the solution, referencing the CsvToMarkdown library. Wire it into the .slnx and configure it for net10.0 with Swagger/OpenAPI enabled.",
-      "status": "inProgress",
-      "devIterations": 0,
+      "status": "inQa",
+      "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:22:05.400Z"
+      "updatedAt": "2026-04-22T15:24:29.014Z"
     },
     {
       "id": 8,
       "title": "Implement in-memory job store",
       "description": "Define a Job model (id, status enum, result bytes, error) and an IJobStore interface with InMemoryJobStore implementation using a thread-safe dictionary. Register it as a singleton in the DI container.",
-      "status": "backlog",
-      "devIterations": 0,
+      "status": "done",
+      "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:22:05.398Z"
+      "updatedAt": "2026-04-22T15:38:37.997Z"
     },
     {
       "id": 9,
@@ -79,7 +79,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:22:05.398Z"
+      "updatedAt": "2026-04-22T15:36:58.863Z"
     },
     {
       "id": 10,
@@ -88,7 +88,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:22:05.398Z"
+      "updatedAt": "2026-04-22T15:36:58.863Z"
     },
     {
       "id": 11,
@@ -97,7 +97,7 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:22:05.398Z"
+      "updatedAt": "2026-04-22T15:36:58.863Z"
     },
     {
       "id": 12,
@@ -106,21 +106,21 @@
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:22:05.398Z"
+      "updatedAt": "2026-04-22T15:36:58.863Z"
     }
   ],
-  "currentTaskNum": 7,
-  "totalLLMCalls": 1,
+  "currentTaskNum": 8,
+  "totalLLMCalls": 3,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": 7,
-    "content": "```json\n[\n  {\n    \"id\": 7,\n    \"title\": \"Create ASP.NET Core Web API project\",\n    \"description\": \"Add a new ASP.NET Core minimal API project (CsvToMarkdown.Api) to the solution, referencing the CsvToMarkdown library. Wire it into the .slnx and configure it for net10.0 with Swagger/OpenAPI enabled.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 8,\n    \"title\": \"Implement in-memory job store\",\n    \"description\": \"Define a Job model (id, status enum, result bytes, error) and an IJobStore interface with InMemoryJobStore implementation using a thread-safe dictionary. Register it as a singleton in the DI container.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 9,\n    \"title\": \"Implement upload endpoint\",\n    \"description\": \"Add POST /jobs accepting multipart/form-data with a CSV file. Queue a background Task that runs CsvConverter, storing the result in IJobStore. Return 202 Accepted with the job id and initial status immediately without blocking.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 10,\n    \"title\": \"Implement status and download endpoints\",\n    \"description\": \"Add GET /jobs/{id} returning JSON with job id and status (queued/running/succeeded/failed plus optional error summary). Add GET /jobs/{id}/result returning the Markdown file as text/markdown when succeeded, or 404/409 otherwise.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 11,\n    \"title\": \"Write API integration tests\",\n    \"description\": \"Add an xUnit test project (CsvToMarkdown.Api.Tests) using WebApplicationFactory. Cover upload-poll-download for a small edge-case CSV and for a 10k-row CSV. Assert status transitions, footer row count, and that incomplete jobs do not return a result. Persist input CSV and output .md to artifacts/test-output/.\",\n    \"status\": \"backlog\"\n  },\n  {\n    \"id\": 12,\n    \"title\": \"Update README with API documentation\",\n    \"description\": \"Extend README.md with API usage (curl examples for upload, status, download), Swagger URL, documented exit/error contracts, and how to run the API tests. Note the artifact folder entries added by the API test suite.\",\n    \"status\": \"backlog\"\n  }\n]\n```\n\n---\n\n## Next Task: Create ASP.NET Core Web API Project (Task 7)\n\n### What needs to be done and why it matters\n\nAll Epic 2 work depends on having a runnable ASP.NET Core Web API project in the solution. This task establishes the project skeleton: a new project, solution reference, library dependency, and Swagger/OpenAPI scaffolding. Nothing else (job store, endpoints, tests) can be built until this foundation exists.\n\n### Implementation guidance\n\n1. **Create the project** using the `dotnet new webapi` template:\n   - Project name: `CsvToMarkdown.Api`\n   - Target path: `src/CsvToMarkdown.Api/`\n   - Target framework: `net10.0`\n   - Use minimal API style (not controllers) to match the rest of the solution's lean footprint.\n   - Include OpenAPI/Swagger support (the template includes it by default for `webapi`).\n\n2. **Add project reference** to the core library:\n   - `src/CsvToMarkdown.Api/CsvToMarkdown.Api.csproj` must reference `../CsvToMarkdown/CsvToMarkdown.csproj`.\n\n3. **Wire into the solution**:\n   - Add the new project to `CsvToMarkdown.slnx` with `dotnet sln add`.\n\n4. **Confirm Swagger is enabled**:\n   - The generated `Program.cs` should call `builder.Services.AddOpenApi()` (or the Swashbuckle equivalent for net10), and map `/openapi/v1.json` (or `/swagger`) in development mode.\n   - Keep the default weather-forecast sample endpoint removed; replace with a placeholder comment or a simple health-check route (`GET /health` returning `200 OK`) to verify the host starts.\n\n5. **Project file essentials**:\n   - `<TargetFramework>net10.0</TargetFramework>`\n   - `<Nullable>enable</Nullable>`\n   - `<ImplicitUsings>enable</ImplicitUsings>`\n\n### Testing steps\n\n1. Run `dotnet build` from the repo root - all projects (library, CLI, API, tests) must compile with no errors.\n2. Run `dotnet run --project src/CsvToMarkdown.Api` and confirm the host starts and listens (port logged to stdout).\n3. Hit `GET /health` (or the Swagger JSON endpoint) with `curl` and verify a `200` response.\n4. Run `dotnet test` - existing tests must still pass; no regressions introduced.\n\n### Acceptance criteria\n\n- `src/CsvToMarkdown.Api/CsvToMarkdown.Api.csproj` exists, targets `net10.0`, and references the `CsvToMarkdown` library.\n- The project is registered in `CsvToMarkdown.slnx`.\n- `dotnet build` succeeds with zero errors from the repo root.\n- `dotnet run --project src/CsvToMarkdown.Api` starts without runtime errors.\n- At least one reachable route (e.g., `GET /health`) returns `200 OK`.\n- `dotnet test` continues to pass all existing tests.\n\n---\n\n## Remaining Planned Tasks\n- Create ASP.NET Core Web API project\n- Implement in-memory job store\n- Implement upload endpoint\n- Implement status and download endpoints\n- Write API integration tests\n- Update README with API documentation\n\n<task-id>7</task-id>\n\nNow I'll replace the weather forecast sample with a health-check route and clean up the Program.cs:\n\nThe `Microsoft.AspNetCore.OpenApi` package isn't in the local cache and can't be fetched due to SSL issues. I'll remove it from the project — the API endpoint functionality doesn't require it.\n\nBuild succeeded. Now let me run the existing tests to confirm no regressions:\n\nAll 15 tests pass. Now let me commit the changes:\n\n",
-    "updatedAt": "2026-04-22T15:22:05.409Z"
+    "taskId": 8,
+    "content": "Here is the synthesized output.\n\n`requirements.md` is empty in the repo, so remaining work is aligned with **ralph/epic.md** (async job API, tests, artifacts, README). **Task 7** (`Create ASP.NET Core Web API project`) is satisfied in code: `CsvToMarkdown.Api` exists, targets `net10.0`, references `CsvToMarkdown`, Swashbuckle is wired, and the solution includes the project. It stays in **inQa** in `task-status.json` (not edited here); the dev backlog continues with **8–12**.\n\n```json\n[\n  { \"id\": 8, \"title\": \"Implement in-memory job store\", \"description\": \"Define a Job model (id, status enum, result bytes, error) and an IJobStore interface with InMemoryJobStore implementation using a thread-safe dictionary. Register it as a singleton in the DI container.\", \"status\": \"backlog\" },\n  { \"id\": 9, \"title\": \"Implement upload endpoint\", \"description\": \"Add POST /jobs accepting multipart/form-data with a CSV file. Queue a background Task that runs CsvConverter, storing the result in IJobStore. Return 202 Accepted with the job id and initial status immediately without blocking.\", \"status\": \"backlog\" },\n  { \"id\": 10, \"title\": \"Implement status and download endpoints\", \"description\": \"Add GET /jobs/{id} returning JSON with job id and status (queued/running/succeeded/failed plus optional error summary). Add GET /jobs/{id}/result returning the Markdown file as text/markdown when succeeded, or 404/409 otherwise.\", \"status\": \"backlog\" },\n  { \"id\": 11, \"title\": \"Write API integration tests\", \"description\": \"Add an xUnit test project (CsvToMarkdown.Api.Tests) using WebApplicationFactory. Cover upload-poll-download for a small edge-case CSV and for a 10k-row CSV. Assert status transitions, footer row count, and that incomplete jobs do not return a result. Persist input CSV and output .md to artifacts/test-output/.\", \"status\": \"backlog\" },\n  { \"id\": 12, \"title\": \"Update README with API documentation\", \"description\": \"Extend README.md with API usage (curl examples for upload, status, download), Swagger URL, documented exit/error contracts, and how to run the API tests. Note the artifact folder entries added by the API test suite.\", \"status\": \"backlog\" }\n]\n```\n\n### Next task (implementation-ready): Task 8 -- Implement in-memory job store\n\n**Why it matters:** The epic requires an asynchronous job flow (upload returns a job id, clients poll status, then download). A central, thread-safe store for job state and results is the foundation for the upload, status, and download endpoints (tasks 9 and 10) and for integration tests (task 11).\n\n**What to do:** Introduce a small jobs domain in the API project (or a dedicated folder such as `Jobs/`): a **job identifier** type (typically `Guid` as string in JSON, or a clear string id), a **status enum** with at least `Queued`, `Running`, `Succeeded`, and `Failed`, and a **Job** record or class holding id, status, optional **result payload** (the epic task text says result bytes; storing `byte[]` or UTF-8 bytes of the Markdown is fine, as long as download can emit `text/markdown`), and optional **error** information (message and optionally short detail safe for clients). Define **`IJobStore`** with operations needed by upcoming endpoints: create a new job and return its id; update status and attach result or error; get a job by id. Provide **`InMemoryJobStore`** backed by `ConcurrentDictionary<string, Job>` (or similar) so concurrent uploads and polls are safe without external infrastructure. Register **`IJobStore`** as a **singleton** in `Program.cs` so all requests share one store. Keep types nullable-safe and aligned with nullable reference types already enabled on the project.\n\n**Patterns:** Match existing minimal API style in `Program.cs`; keep models plain DTOs suitable for JSON later. Do not add HTTP endpoints in this task unless you need a trivial internal registration sanity check (prefer none to stay scoped).\n\n**Testing:** Run `dotnet build` for the solution. Optionally add a minimal unit test for `InMemoryJobStore` only if the solution already favors testing infrastructure early; otherwise endpoints in task 9 will exercise it. No artifact files required for this task alone.\n\n**Acceptance criteria:** `IJobStore` and `InMemoryJobStore` exist with thread-safe concurrent access; **Job** models cover id, lifecycle status, result storage for successful conversion, and error summary on failure; DI registers the store as singleton; solution builds cleanly; design supports task 9 (background work updates the same store) and task 10 (read status and result by id).\n\n**Traceability:** Supports **ralph/epic.md** (HTTP API job lifecycle, status polling, download of Markdown, testing groundwork) and follows the stated task 8 scope in `ralph/task-status.json`.\n\n## Remaining Planned Tasks\n\n- Implement in-memory job store\n- Implement upload endpoint\n- Implement status and download endpoints\n- Write API integration tests\n- Update README with API documentation\n\n```\n<task-id>8</task-id>\n```\n",
+    "updatedAt": "2026-04-22T15:36:58.871Z"
   },
   "feedback": {
-    "taskId": 7,
-    "content": "",
-    "updatedAt": "2026-04-22T15:22:05.412Z"
+    "taskId": 8,
+    "content": "<status>verified</status>\n",
+    "updatedAt": "2026-04-22T15:38:37.996Z"
   },
-  "lastUpdated": "2026-04-22T15:22:05.412Z"
+  "lastUpdated": "2026-04-22T15:38:37.997Z"
 }

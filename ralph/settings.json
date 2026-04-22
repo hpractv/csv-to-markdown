@@ -1,12 +1,12 @@
 {
   "maxLLMCalls": 500,
-  "planModel": "claude-sonnet-4.6",
-  "devModel": "gpt-5-mini",
-  "qaModel": "gpt-5-mini",
+  "planModel": "composer-2",
+  "devModel": "auto",
+  "qaModel": "auto",
   "devReasoningEffort": "xhigh",
   "qaReasoningEffort": "high",
   "autoCommit": true,
   "planFrequency": 10,
   "minBacklogSize": 10,
-  "agentBackend": "copilot"
+  "agentBackend": "cursor-agent"
 }
