@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/CsvToMarkdown.Api/CsvToMarkdown.Api.csproj" />
     <Project Path="src/CsvToMarkdown.Cli/CsvToMarkdown.Cli.csproj" />
     <Project Path="src/CsvToMarkdown/CsvToMarkdown.csproj" />
   </Folder>
