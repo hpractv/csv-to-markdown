@@ -69,6 +69,46 @@ app.MapPost("/jobs", async (HttpRequest request, IJobStore jobStore, ILoggerFact
     });
 });
 
+app.MapGet("/jobs/{id}", (string id, IJobStore jobStore) =>
+{
+    if (!jobStore.TryGet(id, out var job) || job is null)
+    {
+        return Results.NotFound(new { error = $"Job '{id}' not found." });
+    }
+
+    return Results.Ok(new
+    {
+        id = job.Id,
+        status = job.Status.ToString(),
+        error = job.Error
+    });
+});
+
+app.MapGet("/jobs/{id}/result", (string id, IJobStore jobStore) =>
+{
+    if (!jobStore.TryGet(id, out var job) || job is null)
+    {
+        return Results.NotFound(new { error = $"Job '{id}' not found." });
+    }
+
+    if (job.Status == JobStatus.Queued || job.Status == JobStatus.Running)
+    {
+        return Results.BadRequest(new { error = $"Job '{id}' is still in progress." });
+    }
+
+    if (job.Status == JobStatus.Failed)
+    {
+        return Results.BadRequest(new { error = $"Job '{id}' failed.", details = job.Error });
+    }
+
+    if (job.ResultBytes is null)
+    {
+        return Results.NotFound(new { error = "Result not found." });
+    }
+
+    return Results.Bytes(job.ResultBytes, "text/markdown", $"result-{id}.md");
+});
+
 app.Run();
 
 static bool IsCsvUpload(IFormFile file)
@@ -138,3 +178,5 @@ static void TryDeleteTempFile(string path, ILogger logger, string jobId)
         logger.LogWarning(ex, "Failed to delete temp file for job {JobId}", jobId);
     }
 }
+
+public partial class Program { }
