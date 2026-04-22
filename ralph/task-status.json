@@ -103,10 +103,10 @@
       "id": 12,
       "title": "Finalize README test and API workflow docs",
       "description": "Align README commands, test project references, and artifact table with the real layout and behavior; state clearly whether default dotnet test runs the full matrix including large-row API tests, or document opt-in filters if split later.",
-      "status": "inQa",
+      "status": "done",
       "devIterations": 2,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T17:38:04.550Z"
+      "updatedAt": "2026-04-22T17:38:15.011Z"
     },
     {
       "id": 13,
@@ -136,8 +136,8 @@
       "updatedAt": "2026-04-22T17:38:08.140Z"
     }
   ],
-  "currentTaskNum": 15,
-  "totalLLMCalls": 6,
+  "currentTaskNum": 12,
+  "totalLLMCalls": 5,
   "maxLLMCalls": 500,
   "nextTask": {
     "taskId": null,
@@ -145,9 +145,9 @@
     "updatedAt": "2026-04-22T17:37:27.735Z"
   },
   "feedback": {
-    "taskId": 15,
-    "content": "Checked `requirements.md` against `ralph/epic.md`, ran `dotnet test` (20 tests, all passed), and confirmed `artifacts/test-output/` contains the API large/small CSV/MD pairs plus other listed artifacts. The five Definition of Done items in `requirements.md` match the epic’s intent and the verified product state (async upload/status/download, polling model, conversion semantics, `dotnet test` + artifacts including 10k-row API case, footer/body consistency asserted in `ApiJobFlowIntegrationTests`).\n\n```\n<status>verified</status>\n```\n",
-    "updatedAt": "2026-04-22T17:38:08.139Z"
+    "taskId": 12,
+    "content": "Reviewed `README.md` against `Program.cs`, `launchSettings.json`, and the API and artifact tests. Confirmed endpoints, ports, Swagger/OpenAPI paths, multipart field name, status values, and artifact filenames match the code. Ran `dotnet test` at the repo root; all tests passed.\n\n```\n<status>verified</status>\n```\n",
+    "updatedAt": "2026-04-22T17:38:15.009Z"
   },
-  "lastUpdated": "2026-04-22T17:38:08.140Z"
+  "lastUpdated": "2026-04-22T17:38:15.011Z"
 }
