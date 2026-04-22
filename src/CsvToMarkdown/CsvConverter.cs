@@ -10,7 +10,7 @@ public static class CsvConverter
     /// If <paramref name="outputPath"/> is null or empty, the output file is placed
     /// in the same directory as the input with the extension replaced by .md.
     /// </summary>
-    public static void Convert(string inputPath, string? outputPath = null)
+    public static string Convert(string inputPath, string? outputPath = null)
     {
         if (!File.Exists(inputPath))
             throw new FileNotFoundException($"CSV file not found: {inputPath}", inputPath);
@@ -20,6 +20,7 @@ public static class CsvConverter
         var rows = CsvParser.ParseRows(inputPath);
         using var writer = new StreamWriter(resolvedOutput, append: false, Encoding.UTF8);
         MarkdownRenderer.Render(rows, writer);
+        return resolvedOutput;
     }
 
     private static string ResolveOutputPath(string inputPath, string? outputPath)
