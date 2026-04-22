@@ -5,6 +5,7 @@
     <Project Path="src/CsvToMarkdown/CsvToMarkdown.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/CsvToMarkdown.Api.Tests/CsvToMarkdown.Api.Tests.csproj" />
     <Project Path="tests/CsvToMarkdown.Tests/CsvToMarkdown.Tests.csproj" />
   </Folder>
 </Solution>

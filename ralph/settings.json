@@ -1,14 +1,14 @@
 {
   "maxLLMCalls": 500,
-  "planModel": "gemini-3.1-pro-preview",
-  "devModel": "gemini-3.1-flash-lite-preview",
-  "qaModel": "gemini-3.1-flash-lite-preview",
+  "planModel": "composer-2",
+  "devModel": "auto",
+  "qaModel": "auto",
   "devReasoningEffort": "xhigh",
   "qaReasoningEffort": "high",
   "autoCommit": true,
   "planFrequency": 10,
   "minBacklogSize": 10,
-  "agentBackend": "gemini",
+  "agentBackend": "cursor-agent",
   "epicFile": "ralph/epic.md",
   "requirementsFile": "",
   "pauseAfterPlan": false

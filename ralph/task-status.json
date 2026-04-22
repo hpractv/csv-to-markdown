@@ -92,35 +92,44 @@
     },
     {
       "id": 11,
-      "title": "Write API integration tests",
-      "description": "Add CsvToMarkdown.Api.Tests with WebApplicationFactory covering upload, poll until terminal state, and download for a small edge-case CSV and a 10k-row CSV, with artifacts under artifacts/test-output/.",
-      "status": "backlog",
-      "devIterations": 0,
+      "title": "Harden API job-flow integration tests",
+      "description": "Extend CsvToMarkdown.Api.Tests so GET /jobs/{id}/result is proven never to return successful Markdown for Queued, Running, or Failed jobs, assert a believable status transition path on success, and remove or replace the misleading placeholder ApiIntegrationTests in CsvToMarkdown.Tests so the API suite is authoritative under solution-wide dotnet test.",
+      "status": "done",
+      "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:43:27.898Z"
+      "updatedAt": "2026-04-22T17:35:35.056Z"
     },
     {
       "id": 12,
-      "title": "Update README with API documentation",
-      "description": "Document how to run the API, Swagger URL, curl examples for upload, status, and download, test commands, and new artifact files from the API test suite.",
-      "status": "backlog",
-      "devIterations": 0,
+      "title": "Finish README and release checklist docs",
+      "description": "Close README gaps for the epic: document UTF-8 as the default encoding, describe the download filename or Content-Disposition behavior exposed by the result endpoint, add a concise note that server conversion follows the library streaming parser for large CSVs, sync test file references with the final test layout, and update ralph/epic.md Definition of Done checkboxes once verification is complete.",
+      "status": "inQa",
+      "devIterations": 1,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T15:43:27.898Z"
+      "updatedAt": "2026-04-22T17:35:29.924Z"
+    },
+    {
+      "id": 13,
+      "title": "Author root requirements.md",
+      "description": "Populate the empty requirements.md with the functional requirements, testing expectations, and definition of done drawn from ralph/epic.md so reviews and task traceability have a stable product anchor at the repo root.",
+      "status": "inQa",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T17:34:52.064Z",
+      "updatedAt": "2026-04-22T17:35:28.041Z"
     }
   ],
-  "currentTaskNum": 10,
-  "totalLLMCalls": 2,
+  "currentTaskNum": 11,
+  "totalLLMCalls": 3,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": 10,
-    "content": "## Task: Implement status and download endpoints\n\nAdd GET /jobs/{id} for JSON status and optional error, and GET /jobs/{id}/result to return text/markdown when succeeded with correct errors for missing or incomplete jobs.",
-    "updatedAt": "2026-04-22T16:53:41.299Z"
+    "taskId": 13,
+    "content": "## Task: Author root requirements.md\n\nPopulate the empty requirements.md with the functional requirements, testing expectations, and definition of done drawn from ralph/epic.md so reviews and task traceability have a stable product anchor at the repo root.",
+    "updatedAt": "2026-04-22T17:34:52.074Z"
   },
   "feedback": {
-    "taskId": 10,
-    "content": "thought:\n<status>verified</status>\n",
-    "updatedAt": "2026-04-22T17:00:17.322Z"
+    "taskId": 11,
+    "content": "<status>verified</status>\n",
+    "updatedAt": "2026-04-22T17:35:35.055Z"
   },
-  "lastUpdated": "2026-04-22T17:00:17.324Z"
+  "lastUpdated": "2026-04-22T17:35:35.056Z"
 }
