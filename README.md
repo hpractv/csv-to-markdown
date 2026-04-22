@@ -6,7 +6,7 @@ The first row of the CSV becomes the table header. Every subsequent row becomes 
 
 ## Prerequisites
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- .NET SDK 10.0 (TargetFramework: net10.0)
 
 ## Build
 
@@ -47,7 +47,7 @@ dotnet run --project src/CsvToMarkdown.Cli -- data/employees.csv out/employees.m
 dotnet test
 ```
 
-All tests should pass. After each run, inspectable `.md` output files are written to `artifacts/test-output/` in the repo root.
+Running the test suite writes inspectable `.md` output files to `artifacts/test-output/`. The test suite passes locally.
 
 ## Test artifacts
 
