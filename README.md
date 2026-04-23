@@ -126,10 +126,11 @@ Every test run writes generated `.md` and `.csv` artifacts to `artifacts/test-ou
 | `integration-explicit-output-path.md` | End-to-end conversion using an explicit output path |
 | `integration-quoted-comma-field.md` | Quoted comma inside a field rendered as one cell |
 | `integration-missing-input-file.md` | Expected error message for a missing input file |
+| `LargeFilesInACSV.csv` | Generated 50,000-row CSV input from the large-file streaming test |
 | `large_file_output.md` | Output from the large-file streaming test (50,000 data rows) |
-| `api-small-edge-case-input.csv` | Upload source CSV for API small edge-case integration test |
+| `ApiSmallEdgeCaseInput.csv` | Upload source CSV for API small edge-case integration test |
 | `api-small-edge-case-output.md` | Downloaded Markdown from API small edge-case integration test |
-| `api-large-10000-input.csv` | Upload source CSV for API 10,000+ row integration test |
+| `FilesInACSVLarge_10000.csv` | Upload source CSV for API 10,000+ row integration test |
 | `api-large-10000-output.md` | Downloaded Markdown from API 10,000+ row integration test |
 
 The tests use `Contains` assertions rather than full-string golden comparisons, so the artifact files serve as human-readable output for manual review rather than as automated reference files.

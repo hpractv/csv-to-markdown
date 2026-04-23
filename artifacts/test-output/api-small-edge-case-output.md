@@ -1,4 +1,4 @@
-﻿# api small edge case input
+﻿# Api Small Edge Case Input
 
 | Name | Notes | Score |
 | --- | --- | --- |
