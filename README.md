@@ -1,8 +1,10 @@
 # CsvToMarkdown
 
-Converts a CSV file to a GFM pipe-table Markdown file.
+Converts a CSV file to a Markdown document with an H1 title and a GFM pipe-table.
 
-The first row of the CSV becomes the table header. Every subsequent row becomes a table body row. A footer line reporting the total number of data rows is appended at the end of the output file.
+The output starts with an H1 derived from the input CSV filename (without extension): `_` and `-` become spaces, and spaces are inserted between concatenated capitalized words (for example, `FilesInACSV.csv` becomes `# Files In A CSV`).
+
+After the title, the first row of the CSV becomes the table header. Every subsequent row becomes a table body row. A footer line reporting the total number of data rows is appended at the end of the output file.
 
 ## Prerequisites
 

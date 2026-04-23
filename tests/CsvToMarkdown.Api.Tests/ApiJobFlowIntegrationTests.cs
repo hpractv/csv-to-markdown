@@ -39,6 +39,7 @@ public class ApiJobFlowIntegrationTests : IClassFixture<WebApplicationFactory<Pr
         Assert.Equal("Succeeded", observedStatuses[^1]);
 
         var markdown = await DownloadResultAsync(jobId);
+        Assert.StartsWith("# api small edge case input", markdown, StringComparison.Ordinal);
         Assert.Contains("| Name | Notes | Score |", markdown);
         Assert.Contains("| Alice | Contains, comma | 95 |", markdown);
         Assert.Contains(@"| Cara | Uses \| pipe | 88 |", markdown);
@@ -62,6 +63,7 @@ public class ApiJobFlowIntegrationTests : IClassFixture<WebApplicationFactory<Pr
         Assert.Equal("Succeeded", observedStatuses[^1]);
 
         var markdown = await DownloadResultAsync(jobId);
+        Assert.StartsWith("# api large 10000 input", markdown, StringComparison.Ordinal);
         Assert.Contains($"{dataRows} data rows", markdown);
 
         var lines = markdown.Split(Environment.NewLine, StringSplitOptions.None);

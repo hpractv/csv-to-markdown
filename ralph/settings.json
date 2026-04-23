@@ -9,7 +9,7 @@
   "planFrequency": 10,
   "minBacklogSize": 10,
   "agentBackend": "cursor-agent",
-  "epicFile": "ralph/epic.md",
+  "epicFile": "docs/epic3.md",
   "requirementsFile": "",
-  "pauseAfterPlan": false
+  "pauseAfterPlan": true
 }

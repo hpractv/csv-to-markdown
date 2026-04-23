@@ -102,11 +102,11 @@
     {
       "id": 12,
       "title": "Finalize README test and API workflow docs",
-      "description": "Align README commands, test project references, and artifact table with the real layout and behavior; state clearly whether default dotnet test runs the full matrix including large-row API tests, or document opt-in filters if split later.",
+      "description": "Complete QA on the root README: confirm commands, ports, artifact filenames, and test workflow text match the solution and tests; make the default `dotnet test` scope versus optional targeted runs unambiguous for routine development.",
       "status": "done",
       "devIterations": 2,
       "createdAt": "2026-04-22T15:22:05.398Z",
-      "updatedAt": "2026-04-22T17:38:15.011Z"
+      "updatedAt": "2026-04-22T17:38:54.507Z"
     },
     {
       "id": 13,
@@ -128,26 +128,53 @@
     },
     {
       "id": 15,
-      "title": "Sync requirements Definition of Done checkboxes",
-      "description": "After implementation verification matches requirements.md, update the Definition of Done checkbox list at the bottom of requirements.md so it stays consistent with the epic and verified product state.",
+      "title": "Check off requirements Definition of Done",
+      "description": "Update requirements.md so the Definition of Done checklist matches verified behavior (API contract, polling, conversion and streaming notes, test workflow, artifacts including 10k-row run, footer correctness) once README and tests are finalized.",
       "status": "done",
       "devIterations": 1,
       "createdAt": "2026-04-22T17:36:55.895Z",
-      "updatedAt": "2026-04-22T17:38:08.140Z"
+      "updatedAt": "2026-04-22T17:38:45.911Z"
+    },
+    {
+      "id": 16,
+      "title": "Add H1 title from CSV filename",
+      "description": "Implement the filename-based Markdown H1 (stem only) with underscore and hyphen to spaces plus spaced-out capitals per epic3 examples, and emit it before the GFM table without breaking streaming conversion.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-23T14:47:59.857Z",
+      "updatedAt": "2026-04-23T14:51:50.775Z"
+    },
+    {
+      "id": 17,
+      "title": "Test H1 title across unit and API flows",
+      "description": "Cover the title helper and end-to-end outputs with small and large fixtures; extend API integration assertions and refresh artifacts under artifacts/test-output/ including the 10k-row pair.",
+      "status": "backlog",
+      "devIterations": 0,
+      "createdAt": "2026-04-23T14:47:59.857Z",
+      "updatedAt": "2026-04-23T14:47:59.857Z"
+    },
+    {
+      "id": 18,
+      "title": "Align requirements and epic docs",
+      "description": "Update requirements.md, ralph/epic.md, README (and epic3 checklists) so the title rule, download naming if changed, and Definition of Done match verified behavior after dotnet test.",
+      "status": "backlog",
+      "devIterations": 0,
+      "createdAt": "2026-04-23T14:47:59.857Z",
+      "updatedAt": "2026-04-23T14:47:59.857Z"
     }
   ],
-  "currentTaskNum": 12,
-  "totalLLMCalls": 5,
+  "currentTaskNum": 16,
+  "totalLLMCalls": 2,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": null,
-    "content": "",
-    "updatedAt": "2026-04-22T17:37:27.735Z"
+    "taskId": 16,
+    "content": "## Task: Add H1 title from CSV filename\n\nImplement the filename-based Markdown H1 (stem only) with underscore and hyphen to spaces plus spaced-out capitals per epic3 examples, and emit it before the GFM table without breaking streaming conversion.",
+    "updatedAt": "2026-04-23T14:49:12.060Z"
   },
   "feedback": {
-    "taskId": 12,
-    "content": "Reviewed `README.md` against `Program.cs`, `launchSettings.json`, and the API and artifact tests. Confirmed endpoints, ports, Swagger/OpenAPI paths, multipart field name, status values, and artifact filenames match the code. Ran `dotnet test` at the repo root; all tests passed.\n\n```\n<status>verified</status>\n```\n",
-    "updatedAt": "2026-04-22T17:38:15.009Z"
+    "taskId": 16,
+    "content": "<status>verified</status>\n",
+    "updatedAt": "2026-04-23T14:51:50.774Z"
   },
-  "lastUpdated": "2026-04-22T17:38:15.011Z"
+  "lastUpdated": "2026-04-23T14:51:50.775Z"
 }

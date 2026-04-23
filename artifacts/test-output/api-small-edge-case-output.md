@@ -1,4 +1,6 @@
-﻿| Name | Notes | Score |
+﻿# api small edge case input
+
+| Name | Notes | Score |
 | --- | --- | --- |
 | Alice | Contains, comma | 95 |
 | Bob |  |  |

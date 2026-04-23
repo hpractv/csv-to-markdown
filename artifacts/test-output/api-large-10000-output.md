@@ -1,4 +1,6 @@
-﻿| Id | Name | Score |
+﻿# api large 10000 input
+
+| Id | Name | Score |
 | --- | --- | --- |
 | 1 | User1 | 1 |
 | 2 | User2 | 2 |
