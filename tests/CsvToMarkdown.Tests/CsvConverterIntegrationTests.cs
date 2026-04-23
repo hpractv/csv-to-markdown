@@ -24,6 +24,15 @@ public class CsvConverterIntegrationTests
         return path;
     }
 
+    private static string WriteTempCsvWithName(string fileName, string content, out string tempDir)
+    {
+        tempDir = Path.Combine(Path.GetTempPath(), "csv-to-markdown-tests", Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempDir);
+        var path = Path.Combine(tempDir, fileName);
+        File.WriteAllText(path, content, System.Text.Encoding.UTF8);
+        return path;
+    }
+
     private static void CopyToArtifacts(string sourcePath, string testName)
     {
         var dest = Path.Combine(ArtifactDir, $"integration-{testName}.md");
@@ -108,6 +117,35 @@ public class CsvConverterIntegrationTests
         {
             File.Delete(csvPath);
             if (File.Exists(explicitOutput)) File.Delete(explicitOutput);
+        }
+    }
+
+    [Theory]
+    [InlineData("FilesInACSV.csv", "# Files In A CSV")]
+    [InlineData("SomethingToBehold.csv", "# Something To Behold")]
+    [InlineData("employees-q1_summary.csv", "# employees q1 summary")]
+    public void Convert_FileNameStem_WritesMarkdownH1TitleBeforeTable(string csvFileName, string expectedTitleLine)
+    {
+        string tempDir;
+        var csvPath = WriteTempCsvWithName(csvFileName, "ColA,ColB\n1,2", out tempDir);
+        var outputPath = Path.ChangeExtension(csvPath, ".md");
+
+        try
+        {
+            CsvConverter.Convert(csvPath);
+
+            var content = File.ReadAllText(outputPath);
+            var lines = content.Split(Environment.NewLine, StringSplitOptions.None);
+
+            Assert.Equal(expectedTitleLine, lines[0]);
+            Assert.Contains("| ColA | ColB |", content);
+            Assert.Contains("1 data row", content);
+
+            CopyToArtifacts(outputPath, $"title-{Path.GetFileNameWithoutExtension(csvFileName)}");
+        }
+        finally
+        {
+            if (Directory.Exists(tempDir)) Directory.Delete(tempDir, recursive: true);
         }
     }
 }

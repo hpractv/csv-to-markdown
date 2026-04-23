@@ -1,4 +1,6 @@
-﻿| Name | Score |
+﻿# 3nz5qivi.uvt
+
+| Name | Score |
 | --- | --- |
 | Alice | 95 |
 | Bob | 87 |

@@ -59,7 +59,7 @@ app.MapPost("/jobs", async (HttpRequest request, IJobStore jobStore, ILoggerFact
     var logger = loggerFactory.CreateLogger("CsvToMarkdown.Api.JobProcessor");
 
     _ = Task.Run(
-        () => ProcessJobAsync(jobStore, logger, job.Id, tempInputPath),
+        () => ProcessJobAsync(jobStore, logger, job.Id, tempInputPath, file.FileName),
         CancellationToken.None);
 
     return Results.Accepted($"/jobs/{job.Id}", new
@@ -128,7 +128,7 @@ static bool IsCsvUpload(IFormFile file)
            file.ContentType.Equals("application/vnd.ms-excel", StringComparison.OrdinalIgnoreCase);
 }
 
-static async Task ProcessJobAsync(IJobStore jobStore, ILogger logger, string jobId, string inputPath)
+static async Task ProcessJobAsync(IJobStore jobStore, ILogger logger, string jobId, string inputPath, string sourceFileName)
 {
     string? outputPath = null;
 
@@ -141,7 +141,7 @@ static async Task ProcessJobAsync(IJobStore jobStore, ILogger logger, string job
         }
 
         outputPath = Path.Combine(Path.GetTempPath(), $"csv-to-markdown-{Guid.NewGuid():N}.md");
-        CsvConverter.Convert(inputPath, outputPath);
+        CsvConverter.Convert(inputPath, outputPath, sourceFileName);
         var resultBytes = await File.ReadAllBytesAsync(outputPath);
 
         if (!jobStore.TrySetSucceeded(jobId, resultBytes))
