@@ -24,15 +24,15 @@ Expose an **HTTP API** that accepts an uploaded CSV and produces the same Markdo
 - **Unit tests:** C# test project (xUnit or NUnit); converter logic covered with small fixtures; artifacts under a fixed folder (e.g. `artifacts/test-output/`).
 - **Large-file scenario:** Automated coverage using **≥ 10,000 data rows** (plus header): generate or commit a large CSV fixture, run conversion (via API or shared service under test), **persist both the input CSV and output `.md`** under the artifact folder for side-by-side inspection and regression.
 - **API tests:** Integration tests exercise upload → poll until terminal state → download; assert status transitions and final Markdown/footer correctness for at least the large-file case and one small edge-case file.
-- **Development workflow:** **Running tests (including the large-file / API integration path) is part of routine development**—document the command(s), e.g. `dotnet test`, and any env or profile flag if the large test is opt-in to keep default runs fast (if split, document both default and full matrix).
+- **Development workflow:** **Running tests (including the large-file and API integration path) is part of routine development**. Use `dotnet test` as the default full-matrix command and document any optional focused commands used for local iteration.
 
 ## Definition of Done
 
-- [ ] Async job API: upload, status, download (or equivalent documented download contract) implemented and documented (OpenAPI/Swagger or README).
-- [ ] Status endpoint allows clients to poll until completion without holding a long-lived upload connection.
-- [ ] Conversion matches table + footer rules; streaming or chunked processing justified for large inputs.
-- [ ] `dotnet test` (per documented dev workflow) passes; **artifact directory contains retained input/output pairs**, including **10k-row** run artifacts for comparison.
-- [ ] Footer row count matches data rows in the emitted table for persisted large-file output.
+- [x] Async job API: upload, status, download (or equivalent documented download contract) implemented and documented (OpenAPI/Swagger or README).
+- [x] Status endpoint allows clients to poll until completion without holding a long-lived upload connection.
+- [x] Conversion matches title + table + footer rules; streaming or chunked processing justified for large inputs.
+- [x] `dotnet test` (per documented dev workflow) passes; **artifact directory contains retained input/output pairs**, including **10k-row** run artifacts for comparison.
+- [x] Footer row count matches data rows in the emitted table for persisted large-file output.
 
 ## Out of scope (unless explicitly added later)
 

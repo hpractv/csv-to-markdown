@@ -3,6 +3,7 @@
 ## Objective
 
 Expose an HTTP API that accepts an uploaded CSV and produces the same Markdown table semantics as the library implementation:
+- H1 title derived from the input filename (without extension)
 - header row
 - body rows
 - trailing footer line with total data-row count
@@ -16,14 +17,15 @@ Conversion must run asynchronously: clients submit a file, receive a job id, pol
 1. CSV parsing supports normal delimiter and quoting rules, including empty cells and quoted fields.
 2. Markdown output is a valid GFM-style pipe table.
 3. Body row count in the table matches parsed data rows after the header.
-4. Output includes one trailing footer line stating total data rows (excluding the header).
+4. Output starts with an H1 from the input CSV file name (without extension). Replace `_` and `-` with spaces and insert spaces before capital letters in concatenated words (for example, `FilesInACSV.csv` -> `# Files In A CSV`).
+5. Output includes one trailing footer line stating total data rows (excluding the header).
 
 ### HTTP API Contract
 
-5. Upload endpoint accepts `multipart/form-data` (or documented equivalent) and returns a job id (optionally with initial status) without blocking until conversion finishes.
-6. Status endpoint accepts a job id and returns processing state (`queued`, `running`, `succeeded`, `failed` or equivalent). Failed states must include a client-safe error summary.
-7. Download endpoint returns generated Markdown only when the job has succeeded. Incomplete or failed jobs must not return success content as if complete.
-8. Output naming follows source basename semantics where applicable, or the naming behavior is explicitly documented.
+6. Upload endpoint accepts `multipart/form-data` (or documented equivalent) and returns a job id (optionally with initial status) without blocking until conversion finishes.
+7. Status endpoint accepts a job id and returns processing state (`queued`, `running`, `succeeded`, `failed` or equivalent). Failed states must include a client-safe error summary.
+8. Download endpoint returns generated Markdown only when the job has succeeded. Incomplete or failed jobs must not return success content as if complete.
+9. Output naming follows source basename semantics where applicable, or the naming behavior is explicitly documented.
 
 ## Testing Expectations
 
@@ -35,12 +37,12 @@ Conversion must run asynchronously: clients submit a file, receive a job id, pol
 6. Integration coverage must validate status transitions and final Markdown/footer correctness for:
    - at least one large-file case, and
    - at least one small edge-case file.
-7. Document the development workflow for routine validation, including `dotnet test` and any optional flag/profile needed if large/API tests are split from default runs.
+7. Document the development workflow for routine validation where `dotnet test` runs the default full matrix (unit, large-file, and API integration coverage), plus any optional focused test commands for local iteration.
 
 ## Definition of Done
 
 - [x] Async job API (upload, status, download or equivalent documented contract) is implemented and documented.
 - [x] Status polling supports completion checks without a long-lived upload request.
-- [x] Conversion behavior matches required table and footer rules, with large-input handling that is streaming/chunked or otherwise justified.
+- [x] Conversion behavior matches required title, table, and footer rules, with large-input handling that is streaming/chunked or otherwise justified.
 - [x] Test workflow passes (`dotnet test` per documented process), and artifact output includes retained input/output pairs, including a 10k-row run.
 - [x] Persisted large-file Markdown footer count matches emitted data-row count.
