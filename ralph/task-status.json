@@ -156,25 +156,25 @@
     {
       "id": 18,
       "title": "Align requirements and epic docs",
-      "description": "Sync root requirements.md, ralph/epic.md, docs/epic3.md, and README so the H1 rule, DoD, and test workflow match shipped behavior after verification.",
-      "status": "backlog",
-      "devIterations": 0,
+      "description": "Sync root requirements.md, ralph/epic.md, docs/epic3.md, and README so the H1 filename title rule, Definition of Done, and test workflow match verified shipped behavior.",
+      "status": "done",
+      "devIterations": 1,
       "createdAt": "2026-04-23T14:47:59.857Z",
-      "updatedAt": "2026-04-23T14:52:34.271Z"
+      "updatedAt": "2026-04-23T15:19:16.312Z"
     }
   ],
-  "currentTaskNum": 17,
+  "currentTaskNum": 18,
   "totalLLMCalls": 2,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": 17,
-    "content": "## Task: Test H1 title across unit and API flows\n\nHarden title coverage: deterministic basename for the library large-file test, assert emitted H1, and ensure artifacts and API cases fully reflect the title rule alongside footer and table checks.",
-    "updatedAt": "2026-04-23T14:53:37.952Z"
+    "taskId": 18,
+    "content": "## Task: Align requirements and epic docs\n\nSync root requirements.md, ralph/epic.md, docs/epic3.md, and README so the H1 filename title rule, Definition of Done, and test workflow match verified shipped behavior.",
+    "updatedAt": "2026-04-23T15:16:26.004Z"
   },
   "feedback": {
-    "taskId": 17,
+    "taskId": 18,
     "content": "<status>verified</status>\n",
-    "updatedAt": "2026-04-23T14:58:31.584Z"
+    "updatedAt": "2026-04-23T15:19:16.311Z"
   },
-  "lastUpdated": "2026-04-23T14:58:31.588Z"
+  "lastUpdated": "2026-04-23T15:19:16.312Z"
 }

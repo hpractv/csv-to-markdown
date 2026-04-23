@@ -103,7 +103,9 @@ curl -sS -f "http://localhost:5085/jobs/$JOB_ID/result" -o "result-$JOB_ID.md"
 dotnet test
 ```
 
-Run API flow integration tests in the dedicated API test project:
+`dotnet test` is the routine full validation path and runs unit tests, large-file scenarios, and API integration coverage.
+
+For faster local iteration, you can run only the API flow integration tests in the dedicated API test project:
 
 ```bash
 dotnet test tests/CsvToMarkdown.Api.Tests/CsvToMarkdown.Api.Tests.csproj
