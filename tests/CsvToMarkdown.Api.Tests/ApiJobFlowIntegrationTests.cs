@@ -22,7 +22,7 @@ public class ApiJobFlowIntegrationTests : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task UploadPollDownload_SmallEdgeCaseCsv_SucceedsWithExpectedMarkdown()
     {
-        var csvFileName = "api-small-edge-case-input.csv";
+        var csvFileName = "ApiSmallEdgeCaseInput.csv";
         var csvContent = string.Join(
             Environment.NewLine,
             [
@@ -39,7 +39,7 @@ public class ApiJobFlowIntegrationTests : IClassFixture<WebApplicationFactory<Pr
         Assert.Equal("Succeeded", observedStatuses[^1]);
 
         var markdown = await DownloadResultAsync(jobId);
-        Assert.StartsWith("# api small edge case input", markdown, StringComparison.Ordinal);
+        Assert.StartsWith("# Api Small Edge Case Input", markdown, StringComparison.Ordinal);
         Assert.Contains("| Name | Notes | Score |", markdown);
         Assert.Contains("| Alice | Contains, comma | 95 |", markdown);
         Assert.Contains(@"| Cara | Uses \| pipe | 88 |", markdown);
@@ -53,7 +53,7 @@ public class ApiJobFlowIntegrationTests : IClassFixture<WebApplicationFactory<Pr
     public async Task UploadPollDownload_LargeCsvWithTenThousandRows_SucceedsAndFooterMatches()
     {
         const int dataRows = 10_000;
-        var csvFileName = "api-large-10000-input.csv";
+        var csvFileName = "FilesInACSVLarge_10000.csv";
         var csvContent = BuildLargeCsv(dataRows);
 
         var (jobId, initialStatus) = await UploadCsvAsync(csvFileName, csvContent);
@@ -63,7 +63,10 @@ public class ApiJobFlowIntegrationTests : IClassFixture<WebApplicationFactory<Pr
         Assert.Equal("Succeeded", observedStatuses[^1]);
 
         var markdown = await DownloadResultAsync(jobId);
-        Assert.StartsWith("# api large 10000 input", markdown, StringComparison.Ordinal);
+        Assert.StartsWith("# Files In A CSV Large 10000", markdown, StringComparison.Ordinal);
+        Assert.Contains("| Id | Name | Score |", markdown);
+        Assert.Contains("| 1 | User1 | 1 |", markdown);
+        Assert.Contains($"| {dataRows} | User{dataRows} | 0 |", markdown);
         Assert.Contains($"{dataRows} data rows", markdown);
 
         var lines = markdown.Split(Environment.NewLine, StringSplitOptions.None);

@@ -36,40 +36,35 @@ public class LargeFileStreamingTests
     [Fact]
     public void Convert_LargeFile_FooterRowCountMatchesGeneratedRows()
     {
-        var csvPath = Path.GetTempFileName();
+        var csvPath = Path.Combine(ArtifactDir, "LargeFilesInACSV.csv");
         var outputPath = Path.Combine(ArtifactDir, "large_file_output.md");
+        const string expectedTitle = "# Large Files In A CSV";
 
-        try
+        // Generate a large CSV using a StreamWriter so the generator itself is streaming.
+        using (var writer = new StreamWriter(csvPath, append: false, Encoding.UTF8))
         {
-            // Generate a large CSV using a StreamWriter so the generator itself is streaming.
-            using (var writer = new StreamWriter(csvPath, append: false, Encoding.UTF8))
-            {
-                writer.WriteLine("Id,Name,Value,Category,Active");
-                for (int i = 1; i <= DataRowCount; i++)
-                    writer.WriteLine($"{i},Name{i},{i * 3},Cat{i % 10},{(i % 2 == 0 ? "true" : "false")}");
-            }
-
-            CsvConverter.Convert(csvPath, outputPath);
-
-            Assert.True(File.Exists(outputPath));
-
-            // Read the last non-empty line: should be the footer "50000 data rows"
-            var lines = File.ReadAllLines(outputPath);
-            var footer = lines.Last(l => l.Trim().Length > 0);
-            Assert.Equal($"{DataRowCount} data rows", footer);
-
-            // Count body rows (pipe rows after the separator row) as a secondary check.
-            int separatorIndex = Array.FindIndex(lines, l => l.StartsWith("|") && l.Contains("---"));
-            Assert.True(separatorIndex >= 0, "Separator row not found in output.");
-            int bodyRowCount = lines
-                .Skip(separatorIndex + 1)
-                .Count(l => l.StartsWith("|"));
-            Assert.Equal(DataRowCount, bodyRowCount);
+            writer.WriteLine("Id,Name,Value,Category,Active");
+            for (int i = 1; i <= DataRowCount; i++)
+                writer.WriteLine($"{i},Name{i},{i * 3},Cat{i % 10},{(i % 2 == 0 ? "true" : "false")}");
         }
-        finally
-        {
-            if (File.Exists(csvPath)) File.Delete(csvPath);
-            // Leave outputPath in artifacts/test-output/ for inspection.
-        }
+
+        CsvConverter.Convert(csvPath, outputPath);
+
+        Assert.True(File.Exists(outputPath));
+
+        var lines = File.ReadAllLines(outputPath);
+        Assert.Equal(expectedTitle, lines[0]);
+
+        // Read the last non-empty line: should be the footer "50000 data rows"
+        var footer = lines.Last(l => l.Trim().Length > 0);
+        Assert.Equal($"{DataRowCount} data rows", footer);
+
+        // Count body rows (pipe rows after the separator row) as a secondary check.
+        int separatorIndex = Array.FindIndex(lines, l => l.StartsWith("|") && l.Contains("---"));
+        Assert.True(separatorIndex >= 0, "Separator row not found in output.");
+        int bodyRowCount = lines
+            .Skip(separatorIndex + 1)
+            .Count(l => l.StartsWith("|"));
+        Assert.Equal(DataRowCount, bodyRowCount);
     }
 }

@@ -147,34 +147,34 @@
     {
       "id": 17,
       "title": "Test H1 title across unit and API flows",
-      "description": "Cover the title helper and end-to-end outputs with small and large fixtures; extend API integration assertions and refresh artifacts under artifacts/test-output/ including the 10k-row pair.",
-      "status": "backlog",
-      "devIterations": 0,
+      "description": "Harden title coverage: deterministic basename for the library large-file test, assert emitted H1, and ensure artifacts and API cases fully reflect the title rule alongside footer and table checks.",
+      "status": "done",
+      "devIterations": 1,
       "createdAt": "2026-04-23T14:47:59.857Z",
-      "updatedAt": "2026-04-23T14:47:59.857Z"
+      "updatedAt": "2026-04-23T14:58:31.588Z"
     },
     {
       "id": 18,
       "title": "Align requirements and epic docs",
-      "description": "Update requirements.md, ralph/epic.md, README (and epic3 checklists) so the title rule, download naming if changed, and Definition of Done match verified behavior after dotnet test.",
+      "description": "Sync root requirements.md, ralph/epic.md, docs/epic3.md, and README so the H1 rule, DoD, and test workflow match shipped behavior after verification.",
       "status": "backlog",
       "devIterations": 0,
       "createdAt": "2026-04-23T14:47:59.857Z",
-      "updatedAt": "2026-04-23T14:47:59.857Z"
+      "updatedAt": "2026-04-23T14:52:34.271Z"
     }
   ],
-  "currentTaskNum": 16,
+  "currentTaskNum": 17,
   "totalLLMCalls": 2,
   "maxLLMCalls": 500,
   "nextTask": {
-    "taskId": 16,
-    "content": "## Task: Add H1 title from CSV filename\n\nImplement the filename-based Markdown H1 (stem only) with underscore and hyphen to spaces plus spaced-out capitals per epic3 examples, and emit it before the GFM table without breaking streaming conversion.",
-    "updatedAt": "2026-04-23T14:49:12.060Z"
+    "taskId": 17,
+    "content": "## Task: Test H1 title across unit and API flows\n\nHarden title coverage: deterministic basename for the library large-file test, assert emitted H1, and ensure artifacts and API cases fully reflect the title rule alongside footer and table checks.",
+    "updatedAt": "2026-04-23T14:53:37.952Z"
   },
   "feedback": {
-    "taskId": 16,
+    "taskId": 17,
     "content": "<status>verified</status>\n",
-    "updatedAt": "2026-04-23T14:51:50.774Z"
+    "updatedAt": "2026-04-23T14:58:31.584Z"
   },
-  "lastUpdated": "2026-04-23T14:51:50.775Z"
+  "lastUpdated": "2026-04-23T14:58:31.588Z"
 }
