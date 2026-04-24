@@ -120,6 +120,48 @@ public class CsvConverterIntegrationTests
         }
     }
 
+    [Fact]
+    public void Convert_OutputFileExists_WithoutOverwrite_ThrowsCsvOutputFileExistsException()
+    {
+        var csvPath = WriteTempCsv("A,B\n1,2");
+        var mdPath = Path.ChangeExtension(csvPath, ".md");
+        try
+        {
+            CsvConverter.Convert(csvPath);
+            var ex = Assert.Throws<CsvOutputFileExistsException>(() => CsvConverter.Convert(csvPath));
+            Assert.Equal(Path.GetFullPath(mdPath), Path.GetFullPath(ex.OutputPath));
+        }
+        finally
+        {
+            File.Delete(csvPath);
+            if (File.Exists(mdPath)) File.Delete(mdPath);
+        }
+    }
+
+    [Fact]
+    public void Convert_OutputFileExists_WithOverwrite_ReplacesFile()
+    {
+        var csvPath = WriteTempCsv("X,Y\n9,8");
+        var mdPath = Path.ChangeExtension(csvPath, ".md");
+        try
+        {
+            CsvConverter.Convert(csvPath);
+            File.WriteAllText(csvPath, "P,Q\na,b", System.Text.Encoding.UTF8);
+
+            CsvConverter.Convert(csvPath, sourceFileName: null, options: new CsvConvertOptions { OverwriteExisting = true });
+
+            var content = File.ReadAllText(mdPath);
+            Assert.Contains("| P | Q |", content);
+            Assert.Contains("| a | b |", content);
+            Assert.Contains("1 data row", content);
+        }
+        finally
+        {
+            File.Delete(csvPath);
+            if (File.Exists(mdPath)) File.Delete(mdPath);
+        }
+    }
+
     [Theory]
     [InlineData("FilesInACSV.csv", "# Files In A CSV")]
     [InlineData("SomethingToBehold.csv", "# Something To Behold")]

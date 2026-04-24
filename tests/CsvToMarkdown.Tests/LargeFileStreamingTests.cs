@@ -48,7 +48,7 @@ public class LargeFileStreamingTests
                 writer.WriteLine($"{i},Name{i},{i * 3},Cat{i % 10},{(i % 2 == 0 ? "true" : "false")}");
         }
 
-        CsvConverter.Convert(csvPath, outputPath);
+        CsvConverter.Convert(csvPath, outputPath, sourceFileName: null, new CsvConvertOptions { OverwriteExisting = true });
 
         Assert.True(File.Exists(outputPath));
 
