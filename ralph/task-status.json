@@ -1,0 +1,180 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Implement GFM Markdown table renderer",
+      "description": "Create a MarkdownRenderer class in the CsvToMarkdown library that accepts an IEnumerable of string arrays (rows) and produces a GFM-style pipe table string with a header row, separator row, body rows, and a trailing footer line reporting the data row count.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T14:27:44.425Z",
+      "updatedAt": "2026-04-22T14:31:08.639Z"
+    },
+    {
+      "id": 2,
+      "title": "Implement public CsvConverter API",
+      "description": "Create a public CsvConverter class that wires CsvParser and MarkdownRenderer together. It should accept an input CSV file path and an optional output path, defaulting to same directory as input with .md extension, and write the rendered Markdown to disk.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T14:27:44.425Z",
+      "updatedAt": "2026-04-22T14:36:52.720Z"
+    },
+    {
+      "id": 3,
+      "title": "Add renderer and integration tests with artifacts",
+      "description": "Write xUnit tests for MarkdownRenderer (minimal table, multi-row, empty field, quoted comma edge case) and end-to-end integration tests for CsvConverter. All tests must write actual .md output to artifacts/test-output/ so humans can inspect them after dotnet test.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T14:27:44.425Z",
+      "updatedAt": "2026-04-22T14:44:44.084Z"
+    },
+    {
+      "id": 4,
+      "title": "Implement CLI entry point",
+      "description": "Update Program.cs in CsvToMarkdown.Cli to accept a CSV file path as a command-line argument, invoke CsvConverter, and report success or usage errors to stdout/stderr with a non-zero exit code on failure.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T14:27:44.425Z",
+      "updatedAt": "2026-04-22T14:53:08.537Z"
+    },
+    {
+      "id": 5,
+      "title": "Add streaming large-file test",
+      "description": "Add a test (or inline justification in code) that verifies the conversion pipeline does not load the entire CSV into memory at once. Generate a file with many rows in the test and assert correct row count in output footer.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T14:27:44.425Z",
+      "updatedAt": "2026-04-22T15:03:30.998Z"
+    },
+    {
+      "id": 6,
+      "title": "Update README with artifact path and usage",
+      "description": "Add a README.md at the repo root documenting how to run the CLI, how to run dotnet test, where artifact .md outputs are written (artifacts/test-output/), and how to refresh golden files when output changes intentionally.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T14:27:44.425Z",
+      "updatedAt": "2026-04-22T15:12:52.030Z"
+    },
+    {
+      "id": 7,
+      "title": "Create ASP.NET Core Web API project",
+      "description": "Add a new ASP.NET Core minimal API project (CsvToMarkdown.Api) to the solution, referencing the CsvToMarkdown library. Wire it into the .slnx and configure it for net10.0 with Swagger/OpenAPI enabled.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T15:22:05.398Z",
+      "updatedAt": "2026-04-22T15:59:57.388Z"
+    },
+    {
+      "id": 8,
+      "title": "Implement in-memory job store",
+      "description": "Define a Job model (id, status enum, result bytes, error) and an IJobStore interface with InMemoryJobStore implementation using a thread-safe dictionary. Register it as a singleton in the DI container.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T15:22:05.398Z",
+      "updatedAt": "2026-04-22T15:38:37.997Z"
+    },
+    {
+      "id": 9,
+      "title": "Implement upload endpoint",
+      "description": "Add POST /jobs accepting multipart/form-data with a CSV file, enqueue background conversion, and return 202 Accepted with job id and initial status without waiting for completion.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T15:22:05.398Z",
+      "updatedAt": "2026-04-22T15:42:24.757Z"
+    },
+    {
+      "id": 10,
+      "title": "Implement status and download endpoints",
+      "description": "Add GET /jobs/{id} for JSON status and optional error, and GET /jobs/{id}/result to return text/markdown when succeeded with correct errors for missing or incomplete jobs.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T15:22:05.398Z",
+      "updatedAt": "2026-04-22T17:00:17.324Z"
+    },
+    {
+      "id": 11,
+      "title": "Finalize API integration tests for epic",
+      "description": "Close the API test work against Definition of Done: confirm upload-poll-download flows stay green in a clean build, strengthen assertions where the epic calls out status transitions and safe error surfaces, and ensure the large and small cases always persist their CSV and Markdown artifacts under artifacts/test-output/ with footer and body row checks that match the emitted table.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T15:22:05.398Z",
+      "updatedAt": "2026-04-22T17:36:08.090Z"
+    },
+    {
+      "id": 12,
+      "title": "Finalize README test and API workflow docs",
+      "description": "Complete QA on the root README: confirm commands, ports, artifact filenames, and test workflow text match the solution and tests; make the default `dotnet test` scope versus optional targeted runs unambiguous for routine development.",
+      "status": "done",
+      "devIterations": 2,
+      "createdAt": "2026-04-22T15:22:05.398Z",
+      "updatedAt": "2026-04-22T17:38:54.507Z"
+    },
+    {
+      "id": 13,
+      "title": "Finalize root requirements.md for QA",
+      "description": "Reconcile requirements.md with shipped API and library behavior, epic scope, and the documented test workflow; update the Definition of Done checklist items to reflect verified evidence from dotnet test and artifacts/test-output/.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T17:34:52.064Z",
+      "updatedAt": "2026-04-22T17:36:48.389Z"
+    },
+    {
+      "id": 14,
+      "title": "Close epic Definition of Done checklist",
+      "description": "Verify each Definition of Done item in ralph/epic.md against the repo (API, tests, artifacts, streaming justification) and update epic markdown checkboxes or brief notes only if something is still open.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T17:35:54.464Z",
+      "updatedAt": "2026-04-22T17:38:04.550Z"
+    },
+    {
+      "id": 15,
+      "title": "Check off requirements Definition of Done",
+      "description": "Update requirements.md so the Definition of Done checklist matches verified behavior (API contract, polling, conversion and streaming notes, test workflow, artifacts including 10k-row run, footer correctness) once README and tests are finalized.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-22T17:36:55.895Z",
+      "updatedAt": "2026-04-22T17:38:45.911Z"
+    },
+    {
+      "id": 16,
+      "title": "Add H1 title from CSV filename",
+      "description": "Implement the filename-based Markdown H1 (stem only) with underscore and hyphen to spaces plus spaced-out capitals per epic3 examples, and emit it before the GFM table without breaking streaming conversion.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-23T14:47:59.857Z",
+      "updatedAt": "2026-04-23T14:51:50.775Z"
+    },
+    {
+      "id": 17,
+      "title": "Test H1 title across unit and API flows",
+      "description": "Harden title coverage: deterministic basename for the library large-file test, assert emitted H1, and ensure artifacts and API cases fully reflect the title rule alongside footer and table checks.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-23T14:47:59.857Z",
+      "updatedAt": "2026-04-23T14:58:31.588Z"
+    },
+    {
+      "id": 18,
+      "title": "Align requirements and epic docs",
+      "description": "Sync root requirements.md, ralph/epic.md, docs/epic3.md, and README so the H1 filename title rule, Definition of Done, and test workflow match verified shipped behavior.",
+      "status": "done",
+      "devIterations": 1,
+      "createdAt": "2026-04-23T14:47:59.857Z",
+      "updatedAt": "2026-04-23T15:19:16.312Z"
+    }
+  ],
+  "currentTaskNum": 18,
+  "totalLLMCalls": 2,
+  "maxLLMCalls": 500,
+  "nextTask": {
+    "taskId": 18,
+    "content": "## Task: Align requirements and epic docs\n\nSync root requirements.md, ralph/epic.md, docs/epic3.md, and README so the H1 filename title rule, Definition of Done, and test workflow match verified shipped behavior.",
+    "updatedAt": "2026-04-23T15:16:26.004Z"
+  },
+  "feedback": {
+    "taskId": 18,
+    "content": "<status>verified</status>\n",
+    "updatedAt": "2026-04-23T15:19:16.311Z"
+  },
+  "lastUpdated": "2026-04-23T15:19:16.312Z"
+}
