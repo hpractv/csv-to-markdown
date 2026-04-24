@@ -141,7 +141,7 @@ static async Task ProcessJobAsync(IJobStore jobStore, ILogger logger, string job
         }
 
         outputPath = Path.Combine(Path.GetTempPath(), $"csv-to-markdown-{Guid.NewGuid():N}.md");
-        CsvConverter.Convert(inputPath, outputPath, sourceFileName);
+        CsvConverter.Convert(inputPath, outputPath, sourceFileName, new CsvConvertOptions { OverwriteExisting = true });
         var resultBytes = await File.ReadAllBytesAsync(outputPath);
 
         if (!jobStore.TrySetSucceeded(jobId, resultBytes))

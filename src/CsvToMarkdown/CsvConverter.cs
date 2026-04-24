@@ -16,12 +16,20 @@ public static class CsvConverter
     /// If <paramref name="outputPath"/> is null or empty, the output file is placed
     /// in the same directory as the input with the extension replaced by .md.
     /// </summary>
-    public static string Convert(string inputPath, string? outputPath = null, string? sourceFileName = null)
+    public static string Convert(
+        string inputPath,
+        string? outputPath = null,
+        string? sourceFileName = null,
+        CsvConvertOptions? options = null)
     {
         if (!File.Exists(inputPath))
             throw new FileNotFoundException($"CSV file not found: {inputPath}", inputPath);
 
         var resolvedOutput = ResolveOutputPath(inputPath, outputPath);
+        var overwrite = options?.OverwriteExisting ?? false;
+        if (File.Exists(resolvedOutput) && !overwrite)
+            throw new CsvOutputFileExistsException(resolvedOutput);
+
         var title = BuildTitle(sourceFileName ?? inputPath);
 
         var rows = CsvParser.ParseRows(inputPath);
@@ -43,7 +51,10 @@ public static class CsvConverter
         return string.IsNullOrWhiteSpace(normalizedWhitespace) ? "Untitled" : normalizedWhitespace;
     }
 
-    private static string ResolveOutputPath(string inputPath, string? outputPath)
+    /// <summary>
+    /// Resolves the Markdown output path for an input CSV and optional explicit output path.
+    /// </summary>
+    public static string ResolveOutputPath(string inputPath, string? outputPath)
     {
         if (!string.IsNullOrEmpty(outputPath))
             return outputPath;

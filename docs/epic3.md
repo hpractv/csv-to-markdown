@@ -19,6 +19,11 @@ Expose an **HTTP API** that accepts an uploaded CSV and produces the same Markdo
 6. **Status:** Request with job id returns processing state (e.g. queued / running / succeeded / failed) and, on failure, an error summary safe for clients.
 7. **Download:** When succeeded, a separate request retrieves the generated Markdown (same basename semantics as source file name where applicable, or documented naming). Failed or incomplete jobs do not return success content as if complete.
 
+### Output file handling
+
+8. When writing converted Markdown to disk, support an explicit overwrite flag (for example, `--overwrite`) that replaces an existing output file without prompting.
+9. Default behavior (without the overwrite flag): if the converted output file already exists, prompt the user to confirm overwrite before replacing it.
+
 ## Testing (must ship with the feature)
 
 - **Unit tests:** C# test project (xUnit or NUnit); converter logic covered with small fixtures; artifacts under a fixed folder (e.g. `artifacts/test-output/`).
